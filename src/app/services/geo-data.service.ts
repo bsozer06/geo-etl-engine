@@ -6,11 +6,19 @@ import { kml } from '@tmcw/togeojson';
 })
 export class GeoDataService {
   currentData = signal<GeoJSON.FeatureCollection | null>(null);
-
+  
   async loadKml(file: File): Promise<void> {
-    const text = await file.text();
-    const xml = new DOMParser().parseFromString(text, 'text/xml');
-    const geojson = kml(xml) as GeoJSON.FeatureCollection;
-    this.currentData.set(geojson);
+    try {
+      const text = await file.text();
+      const xml = new DOMParser().parseFromString(text, 'text/xml');
+
+      const geojson = kml(xml) as GeoJSON.FeatureCollection;
+
+      this.currentData.set(geojson);
+    } catch (err) {
+      console.error('KML parse error', err);
+      throw err;
+    }
   }
+  
 }

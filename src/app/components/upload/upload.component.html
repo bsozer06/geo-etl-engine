@@ -1,0 +1,12 @@
+<label class="upload-btn">
+  Import KML
+  <input
+    type="file"
+    accept=".kml"
+    hidden
+    (change)="onFileSelected($event)"
+  />
+</label>
+
+<span *ngIf="loading">Loading...</span>
+<span *ngIf="error" class="error">{{ error }}</span>
