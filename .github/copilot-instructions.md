@@ -13,7 +13,7 @@ You are assisting in building a **Minimum Viable Product (MVP)** for a GIS data 
 
 - **Framework:** Angular 21 
 - **State Management:** Angular Signals
-- **GIS Library:** Leaflet
+- **GIS Library:** MapLibre GL JS
 - **Conversion Libraries:**
   - `shpjs` (Shapefiles)
   - `@mapbox/togeojson` (KML / GPX)
