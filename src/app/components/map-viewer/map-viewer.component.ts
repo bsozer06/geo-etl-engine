@@ -11,21 +11,31 @@ import { GeoDataService } from '../../services/geo-data.service';
 export class MapViewerComponent {
   @ViewChild('mapContainer', { static: true })
   mapContainer!: ElementRef<HTMLDivElement>;
-
   map!: Map;
+  private readonly SOURCE_ID = 'my-source';
+  private readonly LAYERS = {
+    POINT: 'point-layer',
+    LINE: 'line-layer',
+    POLYGON_FILL: 'polygon-fill-layer',
+    POLYGON_OUTLINE: 'polygon-outline-layer'
+  };
 
   constructor(private geoDataService: GeoDataService) {
-     effect(() => {
-      const data = this.geoDataService.currentData();
-      
-      if (!data) return;
 
+    effect(() => {
+      const data = this.geoDataService.currentData();
+      if (!data) return;
       const source = this.map.getSource('my-source') as maplibregl.GeoJSONSource;
       source.setData(data);
     });
-   }
+
+  }
 
   ngAfterViewInit(): void {
+    this._initializeMap();
+  }
+
+  private _initializeMap(): void {
     this.map = new maplibregl.Map({
       container: this.mapContainer.nativeElement,
       style: 'https://demotiles.maplibre.org/style.json',
@@ -34,31 +44,78 @@ export class MapViewerComponent {
     });
 
     this.map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    this.map.on('load', () => this._onMapLoad());
+  }
 
-    this.map.on('load', () => {
-      console.log('map is ready!');
+  private _onMapLoad(): void {
+    console.log('map is ready!');
 
-      // add source
-      this.map.addSource('my-source', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: []
-        }
-      });
+    this._addGeoJsonSource();
+    this._addPointLayer();
+    this._addLineLayer();
+    this._addPolygonLayers();
+  }
 
-      // add layer
-      this.map.addLayer({
-        id: 'my-layer',
-        type: 'circle',
-        source: 'my-source',
-        paint: {
-          'circle-radius': 5,
-          'circle-color': '#007cbf'
-        }
-      });
+  private _addGeoJsonSource(): void {
+    this.map.addSource(this.SOURCE_ID, {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: []
+      }
+    });
+  }
+
+  private _addPointLayer(): void {
+    this.map.addLayer({
+      id: this.LAYERS.POINT,
+      type: 'circle',
+      source: this.SOURCE_ID,
+      filter: ['==', ['geometry-type'], 'Point'],
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#d11313'
+      }
+    });
+  }
+
+  private _addLineLayer(): void {
+    this.map.addLayer({
+      id: this.LAYERS.LINE,
+      type: 'line',
+      source: this.SOURCE_ID,
+      filter: ['==', ['geometry-type'], 'LineString'],
+      paint: {
+        'line-width': 3,
+        'line-color': '#005eff'
+      }
+    });
+  }
+
+  private _addPolygonLayers(): void {
+    this.map.addLayer({
+      id: this.LAYERS.POLYGON_FILL,
+      type: 'fill',
+      source: this.SOURCE_ID,
+      filter: ['==', ['geometry-type'], 'Polygon'],
+      paint: {
+        'fill-color': '#00ff99',
+        'fill-opacity': 0.4
+      }
     });
 
+    this.map.addLayer({
+      id: this.LAYERS.POLYGON_OUTLINE,
+      type: 'line',
+      source: this.SOURCE_ID,
+      filter: ['==', ['geometry-type'], 'Polygon'],
+      paint: {
+        'line-color': '#009966',
+        'line-width': 2
+      }
+    });
   }
+
+
 
 }
