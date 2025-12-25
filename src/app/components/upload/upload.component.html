@@ -1,12 +1,28 @@
-<label class="upload-btn">
-  Import KML
+<div class="kml-upload">
+
+  <button
+    class="kml-btn"
+    type="button"
+    (click)="fileInput.click()"
+    [disabled]="loading"
+  >
+    📂 Import KML
+  </button>
+
   <input
+    #fileInput
     type="file"
     accept=".kml"
-    class="file-input"
+    hidden
     (change)="onFileSelected($event)"
   />
-</label>
 
-<span *ngIf="loading">Loading...</span>
-<span *ngIf="error" class="error">{{ error }}</span>
+  <span *ngIf="loading" class="status loading">
+    ⏳ Loading...
+  </span>
+
+  <span *ngIf="error" class="status error">
+    ⚠ {{ error }}
+  </span>
+
+</div>

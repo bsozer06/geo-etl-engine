@@ -1,18 +1,48 @@
-.upload-btn {
-  padding: 0.5rem 1rem;
-  background: #2563eb;
-  color: white;
-  border-radius: 4px;
+.kml-upload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+// .kml-upload {
+//   position: absolute;
+//   top: 32px;
+//   left: 12px;
+//   background: #ffffff;
+//   padding: 8px;
+//   border-radius: 8px;
+//   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+// }
+
+
+.kml-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #1f6feb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  display: inline-block;
+  transition: background-color 0.2s ease;
 }
 
-.file-input {
-  display: none;
+.kml-btn:hover {
+  background-color: #1a5fd0;
 }
 
+.kml-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-.error {
-  color: #dc2626;
-  margin-left: 1rem;
+.status {
+  font-size: 13px;
+}
+
+.status.loading {
+  color: #666;
+}
+
+.status.error {
+  color: #c62828;
 }
