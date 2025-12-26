@@ -24,31 +24,10 @@ export class UploadComponent {
     }
 
     if (file.name.endsWith('.dxf')) {
-      this.geoDataService.importDxf(file);
+      // this.geoDataService.importDxf(file);
     }
-    // const input = event.target as HTMLInputElement;
-    // const file = input.files?.[0];
 
-    // this.error = null;
-
-    // if (!file) return;
-
-    // if (!file.name.toLowerCase().endsWith('.kml')) {
-    //   this.error = 'Only .kml files are supported';
-    //   input.value = '';
-    //   return;
-    // }
-
-    // this.loading = true;
-
-    // try {
-    //   await this.geoDataService.loadKml(file);
-    // } catch {
-    //   this.error = 'Failed to load KML file';
-    // } finally {
-    //   this.loading = false;
-    //   input.value = '';
-    // }
+    
   }
 
 

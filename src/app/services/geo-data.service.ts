@@ -26,12 +26,12 @@ export class GeoDataService {
     });
   }
 
-  importDxf(file: File) {
-    this.readFileAsText(file).then(text => {
-      const geojson = this._convertDxfToGeoJSON(text);
-      this.setData(geojson);
-    });
-  }
+  // importDxf(file: File) {
+  //   this.readFileAsText(file).then(text => {
+  //     const geojson = this._convertDxfToGeoJSON(text);
+  //     this.setData(geojson);
+  //   });
+  // }
 
   private readFileAsText(file: File): Promise<string> {
     return new Promise((resolve, reject) => {

@@ -79,7 +79,7 @@ export class MapViewerComponent {
 
   }
 
-   private _styleByGeometryType = (feature: FeatureLike): Style => {
+  private _styleByGeometryType = (feature: FeatureLike): Style => {
     const type = feature.getGeometry()?.getType();
     console.log('style called for:', type);
     return this._styleCache[type ?? 'Point'];
