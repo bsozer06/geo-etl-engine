@@ -1,12 +1,15 @@
 import { Injectable, signal } from '@angular/core';
-import { kml } from '@tmcw/togeojson';
+// import { kml } from '@tmcw/togeojson';
 import DxfParser from 'dxf-parser';
+import KML from 'ol/format/KML';
+import GeoJSON from 'ol/format/GeoJSON';
+import type { FeatureCollection } from 'geojson';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeoDataService {
-  private readonly dataSignal = signal<GeoJSON.FeatureCollection | null>(null);
+  private readonly dataSignal = signal<FeatureCollection | null>(null);
 
   currentData() {
     return this.dataSignal();
@@ -16,7 +19,7 @@ export class GeoDataService {
     this.dataSignal.set(data);
   }
 
-  importKml(file: File) {
+  importKml(file: File): void {
     this.readFileAsText(file).then(text => {
       const geojson = this._convertKmlToGeoJSON(text);
       this.setData(geojson);
@@ -39,13 +42,13 @@ export class GeoDataService {
     });
   }
 
-  private _convertDxfToGeoJSON(dxfText: string): GeoJSON.FeatureCollection {
+   private _convertDxfToGeoJSON(dxfText: string): FeatureCollection {
     const parser = new DxfParser();
     const dxf = parser.parseSync(dxfText);
 
     const features: GeoJSON.Feature[] = [];
-    console.log('dxf:', dxf);
-    dxf?.entities.forEach((e: any) => {
+
+    dxf?.entities?.forEach((e: any) => {
 
       if (e.type === 'POINT') {
         features.push({
@@ -74,6 +77,7 @@ export class GeoDataService {
 
       if (e.type === 'LWPOLYLINE') {
         const coords = e.vertices.map((v: any) => [v.x, v.y]);
+
         features.push({
           type: 'Feature',
           geometry: {
@@ -83,7 +87,6 @@ export class GeoDataService {
           properties: { layer: e.layer }
         });
       }
-
     });
 
     return {
@@ -92,51 +95,25 @@ export class GeoDataService {
     };
   }
 
-  private _convertKmlToGeoJSON(kmlText: string): GeoJSON.FeatureCollection {
-    const parser = new DOMParser();
-    const kmlDom = parser.parseFromString(kmlText, 'text/xml');
+  private _convertKmlToGeoJSON(kmlText: string): FeatureCollection {
+    const kmlFormat = new KML({
+      extractStyles: false
+    });
 
-    const parseError = kmlDom.getElementsByTagName('parsererror');
-    if (parseError.length > 0) {
-      throw new Error('Invalid KML file');
-    }
+    // KML → OL Features
+    const features = kmlFormat.readFeatures(kmlText, {
+      dataProjection: 'EPSG:4326',     // KML standard
+      featureProjection: 'EPSG:3857'   // Map projection
+    });
 
-    // const geojson = kml(kmlDom) as GeoJSON.FeatureCollection;
-    const rawGeojson = kml(kmlDom) as GeoJSON.FeatureCollection;
-    console.log('rawKml:', rawGeojson);
-    
-    // 🧹 Normalize 
+    // OL Features → GeoJSON
+    const geojson = new GeoJSON().writeFeaturesObject(features);
+
     return {
       type: 'FeatureCollection',
-      // features: geojson.features
-      features: rawGeojson.features
-        .filter(f => f.geometry) // remove null geometry
-        .filter(f =>
-          ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon']
-            .includes(f.geometry!.type)
-        )
-        .map(f => ({
-          type: 'Feature',
-          geometry: f.geometry,
-          properties: {
-            ...f.properties
-          }
-        }))
+      features: geojson.features.filter(f => f.geometry)
     };
   }
-
-
-  // async importKml(file: File) {
-  //   try {
-  //     const text = await file.text();
-  //     const xml = new DOMParser().parseFromString(text, 'text/xml');
-  //     const geojson = kml(xml) as GeoJSON.FeatureCollection;
-  //     this.setData(geojson);
-  //   } catch (err) {
-  //     console.error('KML parse error', err);
-  //     throw err;
-  //   }
-  // }
 
 
 }
