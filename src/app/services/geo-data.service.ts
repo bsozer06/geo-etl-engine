@@ -6,38 +6,51 @@ import GeoJSON from 'ol/format/GeoJSON';
 import type { FeatureCollection } from 'geojson';
 import shp from 'shpjs';
 import JSZip from 'jszip';
+import { ProjectionHelper } from '../helpers/projection.helper';
+import { ImportedGeoData } from '../models/imported-geodata.model';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeoDataService {
-  private readonly dataSignal = signal<FeatureCollection | null>(null);
+  // private readonly dataSignal = signal<FeatureCollection | null>(null);
+  private readonly dataSignal = signal<ImportedGeoData | null>(null);
 
   currentData() {
     return this.dataSignal();
   }
 
-  setData(data: GeoJSON.FeatureCollection) {
+  setData(data: ImportedGeoData) {
     this.dataSignal.set(data);
   }
 
   importKml(file: File): void {
     this.readFileAsText(file).then(text => {
       const geojson = this._convertKmlToGeoJSON(text);
-      this.setData(geojson);
+      this.setData({
+        geojson,
+        // crs: 'EPSG:3857'
+        crs: 'EPSG:4326' // ✅ KML standard
+      });
     });
   }
 
   async importShp(file: File): Promise<void> {
     const arrayBuffer = await file.arrayBuffer();
-    const prj = await this._extractPrjFromZip(file);
+    let dataProjection = 'EPSG:4326';
+
+    const geojson = await shp(arrayBuffer) as GeoJSON.FeatureCollection;
+    const prj = await this._extractPrj(file);
+
     if (prj) {
       console.log('PRJ file content:', prj);
+      dataProjection = ProjectionHelper.registerWktProjection(prj);
     }
-    const geojson = await shp(arrayBuffer) as GeoJSON.FeatureCollection;
-    console.log('Shapefile parsed:', geojson);
-    this.setData(geojson);
+    this.dataSignal.set({
+      geojson,
+      crs: dataProjection
+    });
   }
 
   // importDxf(file: File) {
@@ -117,7 +130,7 @@ export class GeoDataService {
     // KML → OL Features
     const features = kmlFormat.readFeatures(kmlText, {
       dataProjection: 'EPSG:4326',     // KML standard
-      featureProjection: 'EPSG:3857'   // Map projection
+      featureProjection: 'EPSG:4326'
     });
 
     // OL Features → GeoJSON
@@ -129,7 +142,7 @@ export class GeoDataService {
     };
   }
 
-  private async _extractPrjFromZip(file: File): Promise<string | null> {
+  private async _extractPrj(file: File): Promise<string | null> {
     const zipFile = await JSZip.loadAsync(file);
     const prjFile = Object.values(zipFile.files)
       .find(f => f.name.toLowerCase().endsWith('.prj'));

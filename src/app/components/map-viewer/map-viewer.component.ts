@@ -34,18 +34,16 @@ export class MapViewerComponent {
 
       if (!data || !this.vectorSource) return;
 
-      const features = new GeoJSON().readFeatures(data, {
-        dataProjection: 'EPSG:3857',
-        featureProjection: 'EPSG:3857'
+      const geojson = data.geojson;
+      const dataCrs = data.crs ?? 'EPSG:4326'; // ⬅️ fallback
+
+      const features = new GeoJSON().readFeatures(geojson, {
+        dataProjection: dataCrs,
+        featureProjection: 'EPSG:3857'    // !!! Basemap projection !!!
       });
-
-
-      console.log('OL features count:', features.length);
 
       this.vectorSource.clear();
       this.vectorSource.addFeatures(features);
-
-      console.log('Source size:', this.vectorSource.getFeatures().length);
     });
 
   }
