@@ -1,10 +1,11 @@
 import { Component, effect, ElementRef, ViewChild } from '@angular/core';
 import maplibregl, { Map } from 'maplibre-gl';
 import { GeoDataService } from '../../services/geo-data.service';
+import { UploadComponent } from "../upload/upload.component";
 
 @Component({
   selector: 'app-map-viewer',
-  imports: [],
+  imports: [UploadComponent],
   templateUrl: './map-viewer.component.html',
   styleUrl: './map-viewer.component.scss',
 })
