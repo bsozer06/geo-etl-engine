@@ -4,6 +4,9 @@ import DxfParser from 'dxf-parser';
 import KML from 'ol/format/KML';
 import GeoJSON from 'ol/format/GeoJSON';
 import type { FeatureCollection } from 'geojson';
+import shp from 'shpjs';
+import JSZip from 'jszip';
+
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +29,17 @@ export class GeoDataService {
     });
   }
 
+  async importShp(file: File): Promise<void> {
+    const arrayBuffer = await file.arrayBuffer();
+    const prj = await this._extractPrjFromZip(file);
+    if (prj) {
+      console.log('PRJ file content:', prj);
+    }
+    const geojson = await shp(arrayBuffer) as GeoJSON.FeatureCollection;
+    console.log('Shapefile parsed:', geojson);
+    this.setData(geojson);
+  }
+
   // importDxf(file: File) {
   //   this.readFileAsText(file).then(text => {
   //     const geojson = this._convertDxfToGeoJSON(text);
@@ -42,7 +56,7 @@ export class GeoDataService {
     });
   }
 
-   private _convertDxfToGeoJSON(dxfText: string): FeatureCollection {
+  private _convertDxfToGeoJSON(dxfText: string): FeatureCollection {
     const parser = new DxfParser();
     const dxf = parser.parseSync(dxfText);
 
@@ -113,6 +127,16 @@ export class GeoDataService {
       type: 'FeatureCollection',
       features: geojson.features.filter(f => f.geometry)
     };
+  }
+
+  private async _extractPrjFromZip(file: File): Promise<string | null> {
+    const zipFile = await JSZip.loadAsync(file);
+    const prjFile = Object.values(zipFile.files)
+      .find(f => f.name.toLowerCase().endsWith('.prj'));
+
+    if (!prjFile) return null;
+
+    return await prjFile.async('text');
   }
 
 
