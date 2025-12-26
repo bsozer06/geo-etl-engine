@@ -6,13 +6,12 @@
     (click)="fileInput.click()"
     [disabled]="loading"
   >
-    📂 Import KML
+    📂 Import
   </button>
 
   <input
     #fileInput
     type="file"
-    accept=".kml"
     hidden
     (change)="onFileSelected($event)"
   />

@@ -25,9 +25,12 @@ export class MapViewerComponent {
 
     effect(() => {
       const data = this.geoDataService.currentData();
+      console.log('data signal:', data);
+
       if (!data) return;
       const source = this.map.getSource('my-source') as maplibregl.GeoJSONSource;
       source.setData(data);
+      console.log('source:', source);
     });
 
   }

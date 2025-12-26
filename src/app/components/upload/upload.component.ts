@@ -13,31 +13,43 @@ export class UploadComponent {
   loading = false;
   error: string | null = null;
 
-  constructor(private geoDataService: GeoDataService) {}
+  constructor(private geoDataService: GeoDataService) { }
 
   async onFileSelected(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    this.error = null;
-
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
-    if (!file.name.toLowerCase().endsWith('.kml')) {
-      this.error = 'Only .kml files are supported';
-      input.value = '';
-      return;
+    if (file.name.endsWith('.kml')) {
+      this.geoDataService.importKml(file);
     }
 
-    this.loading = true;
-
-    try {
-      await this.geoDataService.loadKml(file);
-    } catch {
-      this.error = 'Failed to load KML file';
-    } finally {
-      this.loading = false;
-      input.value = '';
+    if (file.name.endsWith('.dxf')) {
+      this.geoDataService.importDxf(file);
     }
+    // const input = event.target as HTMLInputElement;
+    // const file = input.files?.[0];
+
+    // this.error = null;
+
+    // if (!file) return;
+
+    // if (!file.name.toLowerCase().endsWith('.kml')) {
+    //   this.error = 'Only .kml files are supported';
+    //   input.value = '';
+    //   return;
+    // }
+
+    // this.loading = true;
+
+    // try {
+    //   await this.geoDataService.loadKml(file);
+    // } catch {
+    //   this.error = 'Failed to load KML file';
+    // } finally {
+    //   this.loading = false;
+    //   input.value = '';
+    // }
   }
+
+
 }
