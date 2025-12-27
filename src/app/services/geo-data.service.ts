@@ -8,14 +8,22 @@ import shp from 'shpjs';
 import JSZip from 'jszip';
 import { ProjectionHelper } from '../helpers/projection.helper';
 import { ImportedGeoData } from '../models/imported-geodata.model';
+import { KmlImportStrategy } from '../imports/kml-import.strategy';
+import { ShpImportStrategy } from '../imports/shp-import.strategy';
+import { ImportStrategy } from '../imports/import-strategy.interface';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeoDataService {
-  // private readonly dataSignal = signal<FeatureCollection | null>(null);
   private readonly dataSignal = signal<ImportedGeoData | null>(null);
+
+  private readonly strategies: ImportStrategy[] = [
+    new KmlImportStrategy(),
+    new ShpImportStrategy(),
+    // new DxfImportStrategy()
+  ];
 
   currentData() {
     return this.dataSignal();
@@ -24,133 +32,18 @@ export class GeoDataService {
   setData(data: ImportedGeoData) {
     this.dataSignal.set(data);
   }
+  
+  async import(file: File): Promise<void> {
+    const ext = file.name.split('.').pop()?.toLowerCase();
 
-  importKml(file: File): void {
-    this.readFileAsText(file).then(text => {
-      const geojson = this._convertKmlToGeoJSON(text);
-      this.setData({
-        geojson,
-        // crs: 'EPSG:3857'
-        crs: 'EPSG:4326' // ✅ KML standard
-      });
-    });
-  }
+    const strategy = this.strategies.find(s => s.type === ext);
 
-  async importShp(file: File): Promise<void> {
-    const arrayBuffer = await file.arrayBuffer();
-    let dataProjection = 'EPSG:4326';
-
-    const geojson = await shp(arrayBuffer) as GeoJSON.FeatureCollection;
-    const prj = await this._extractPrj(file);
-
-    if (prj) {
-      console.log('PRJ file content:', prj);
-      dataProjection = ProjectionHelper.registerWktProjection(prj);
+    if (!strategy) {
+      throw new Error(`Unsupported file type: ${ext}`);
     }
-    this.dataSignal.set({
-      geojson,
-      crs: dataProjection
-    });
+
+    const data = await strategy.import(file);
+    this.dataSignal.set(data);
   }
-
-  // importDxf(file: File) {
-  //   this.readFileAsText(file).then(text => {
-  //     const geojson = this._convertDxfToGeoJSON(text);
-  //     this.setData(geojson);
-  //   });
-  // }
-
-  private readFileAsText(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsText(file);
-    });
-  }
-
-  private _convertDxfToGeoJSON(dxfText: string): FeatureCollection {
-    const parser = new DxfParser();
-    const dxf = parser.parseSync(dxfText);
-
-    const features: GeoJSON.Feature[] = [];
-
-    dxf?.entities?.forEach((e: any) => {
-
-      if (e.type === 'POINT') {
-        features.push({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [e.position.x, e.position.y]
-          },
-          properties: { layer: e.layer }
-        });
-      }
-
-      if (e.type === 'LINE') {
-        features.push({
-          type: 'Feature',
-          geometry: {
-            type: 'LineString',
-            coordinates: [
-              [e.start.x, e.start.y],
-              [e.end.x, e.end.y]
-            ]
-          },
-          properties: { layer: e.layer }
-        });
-      }
-
-      if (e.type === 'LWPOLYLINE') {
-        const coords = e.vertices.map((v: any) => [v.x, v.y]);
-
-        features.push({
-          type: 'Feature',
-          geometry: {
-            type: e.closed ? 'Polygon' : 'LineString',
-            coordinates: e.closed ? [coords] : coords
-          },
-          properties: { layer: e.layer }
-        });
-      }
-    });
-
-    return {
-      type: 'FeatureCollection',
-      features
-    };
-  }
-
-  private _convertKmlToGeoJSON(kmlText: string): FeatureCollection {
-    const kmlFormat = new KML({
-      extractStyles: false
-    });
-
-    // KML → OL Features
-    const features = kmlFormat.readFeatures(kmlText, {
-      dataProjection: 'EPSG:4326',     // KML standard
-      featureProjection: 'EPSG:4326'
-    });
-
-    // OL Features → GeoJSON
-    const geojson = new GeoJSON().writeFeaturesObject(features);
-
-    return {
-      type: 'FeatureCollection',
-      features: geojson.features.filter(f => f.geometry)
-    };
-  }
-
-  private async _extractPrj(file: File): Promise<string | null> {
-    const zipFile = await JSZip.loadAsync(file);
-    const prjFile = Object.values(zipFile.files)
-      .find(f => f.name.toLowerCase().endsWith('.prj'));
-
-    if (!prjFile) return null;
-
-    return await prjFile.async('text');
-  }
-
 
 }

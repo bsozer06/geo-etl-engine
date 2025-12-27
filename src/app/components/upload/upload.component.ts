@@ -17,23 +17,10 @@ export class UploadComponent {
 
   async onFileSelected(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
+
     if (!file) return;
-    const fileName = file.name.toLowerCase();
-
-    if (fileName.endsWith('.kml')) {
-      this.geoDataService.importKml(file);
-    }
-
-    if (fileName.endsWith('.dxf')) {
-      // this.geoDataService.importDxf(file);
-      console.warn('DXF feature does not implemented !');
-    }
-
-    if (fileName.endsWith('.zip')) {
-      this.geoDataService.importShp(file);
-    }
-
+    
+    this.geoDataService.import(file);
   }
-
 
 }
