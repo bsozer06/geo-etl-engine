@@ -17,39 +17,10 @@ export class UploadComponent {
 
   async onFileSelected(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
+
     if (!file) return;
-
-    if (file.name.endsWith('.kml')) {
-      this.geoDataService.importKml(file);
-    }
-
-    if (file.name.endsWith('.dxf')) {
-      this.geoDataService.importDxf(file);
-    }
-    // const input = event.target as HTMLInputElement;
-    // const file = input.files?.[0];
-
-    // this.error = null;
-
-    // if (!file) return;
-
-    // if (!file.name.toLowerCase().endsWith('.kml')) {
-    //   this.error = 'Only .kml files are supported';
-    //   input.value = '';
-    //   return;
-    // }
-
-    // this.loading = true;
-
-    // try {
-    //   await this.geoDataService.loadKml(file);
-    // } catch {
-    //   this.error = 'Failed to load KML file';
-    // } finally {
-    //   this.loading = false;
-    //   input.value = '';
-    // }
+    
+    this.geoDataService.import(file);
   }
-
 
 }
