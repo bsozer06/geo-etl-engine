@@ -25,6 +25,7 @@ export class MapViewerComponent {
   mapContainer!: ElementRef<HTMLDivElement>;
   map!: Map;
   vectorSource!: VectorSource;
+  public static readonly BASEMAP_CRS = 'EPSG:3857';
 
   constructor(private geoDataService: GeoDataService) {
 
@@ -39,7 +40,7 @@ export class MapViewerComponent {
 
       const features = new GeoJSON().readFeatures(geojson, {
         dataProjection: dataCrs,
-        featureProjection: 'EPSG:3857'    // !!! Basemap projection !!!
+        featureProjection: MapViewerComponent.BASEMAP_CRS    
       });
 
       this.vectorSource.clear();
@@ -71,7 +72,7 @@ export class MapViewerComponent {
       view: new View({
         center: [0, 0],
         zoom: 2,
-        projection: 'EPSG:3857'
+        projection: MapViewerComponent.BASEMAP_CRS
       })
     });
 
