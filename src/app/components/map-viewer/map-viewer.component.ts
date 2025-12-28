@@ -99,6 +99,13 @@ export class MapViewerComponent {
       })
     }),
 
+    MultiLineString: new Style({
+      stroke: new Stroke({
+        color: '#0752d4ff',
+        width: 3
+      })
+    }),
+
     Polygon: new Style({
       fill: new Fill({
         color: 'rgba(0,255,153,0.4)'

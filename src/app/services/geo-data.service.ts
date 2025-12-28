@@ -12,6 +12,7 @@ import { KmlImportStrategy } from '../imports/kml-import.strategy';
 import { ShpImportStrategy } from '../imports/shp-import.strategy';
 import { ImportStrategy } from '../imports/import-strategy.interface';
 import { GeojsonImportStrategy } from '../imports/geojson-import.strategy';
+import { GpxImportStrategy } from '../imports/gpx-import.strategy';
 
 
 @Injectable({
@@ -24,6 +25,7 @@ export class GeoDataService {
     new KmlImportStrategy(),
     new ShpImportStrategy(),
     new GeojsonImportStrategy(),
+    new GpxImportStrategy()
     // new DxfImportStrategy()
   ];
 
