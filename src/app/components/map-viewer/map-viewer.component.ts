@@ -11,6 +11,8 @@ import { UploadComponent } from "../upload/upload.component";
 import { Fill, Stroke, Style } from 'ol/style.js';
 import CircleStyle from 'ol/style/Circle';
 import { FeatureLike } from 'ol/Feature';
+import { buffer } from 'ol/extent';
+import { isEmpty } from 'ol/extent';
 
 
 @Component({
@@ -40,11 +42,13 @@ export class MapViewerComponent {
 
       const features = new GeoJSON().readFeatures(geojson, {
         dataProjection: dataCrs,
-        featureProjection: MapViewerComponent.BASEMAP_CRS    
+        featureProjection: MapViewerComponent.BASEMAP_CRS
       });
 
       this.vectorSource.clear();
       this.vectorSource.addFeatures(features);
+
+      this._zoomToFeatures();
     });
 
   }
@@ -84,6 +88,32 @@ export class MapViewerComponent {
     return this._styleCache[type ?? 'Point'];
   };
 
+  private _zoomToFeatures(): void {
+    const source = this.vectorSource;
+
+    if (!source) return;
+
+    let extent = source.getExtent();
+
+    // if (!extent || extent.some(v => !isFinite(v))) return;
+    if (isEmpty(extent)) return;
+
+    // Point / very small geometry fix
+    if (
+      extent[0] === extent[2] &&
+      extent[1] === extent[3]
+    ) {
+      extent = buffer(extent, 50); // meters (EPSG:3857)
+    }
+
+    this.map.getView().fit(extent, {
+      padding: [40, 40, 40, 40],
+      duration: 600,
+      maxZoom: 17
+    })
+
+  }
+
   private readonly _styleCache: Record<string, Style> = {
     Point: new Style({
       image: new CircleStyle({
@@ -116,4 +146,5 @@ export class MapViewerComponent {
       })
     })
   };
+
 }
