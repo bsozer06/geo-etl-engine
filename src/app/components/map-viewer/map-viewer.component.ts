@@ -57,6 +57,23 @@ export class MapViewerComponent {
     this._initializeMap();
   }
 
+  export(format: string): void {
+    try {
+      if (format === 'kml' || format === 'gpx' || format === 'shp') {
+        const blob = this.geoDataService.export(format);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `export.${format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      console.error('Export error:', err);
+      alert(err instanceof Error ? err.message : 'Export failed');
+    }
+  }
+
   private _initializeMap(): void {
     this.vectorSource = new VectorSource();
 

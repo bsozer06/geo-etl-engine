@@ -2,5 +2,15 @@
 
   <div #mapContainer class="map-container"></div>
   <app-upload class="map-overlay"></app-upload>
-
+  
+  <!-- Overlay controls -->
+  <div class="map-overlay-controls">
+    <select #format>
+      <option value="kml">KML</option>
+      <option value="gpx">GPX</option>
+      <option value="shp">SHP</option>
+    </select>
+    <button (click)="export(format.value)">Export</button>
+  </div>
+  
 </div>

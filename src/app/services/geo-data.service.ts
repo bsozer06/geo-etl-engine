@@ -8,12 +8,14 @@ import shp from 'shpjs';
 import JSZip from 'jszip';
 import { ProjectionHelper } from '../helpers/projection.helper';
 import { ImportedGeoData } from '../models/imported-geodata.model';
-import { KmlImportStrategy } from '../imports/kml-import.strategy';
-import { ShpImportStrategy } from '../imports/shp-import.strategy';
-import { ImportStrategy } from '../imports/import-strategy.interface';
-import { GeojsonImportStrategy } from '../imports/geojson-import.strategy';
-import { GpxImportStrategy } from '../imports/gpx-import.strategy';
-import { WktImportStrategy } from '../imports/wkt-import.strategy';
+import { KmlImportStrategy } from '../import-export/kml-import.strategy';
+import { ShpImportStrategy } from '../import-export/shp-import.strategy';
+import { ImportStrategy } from '../import-export/interfaces/import-strategy.interface';
+import { GeojsonImportStrategy } from '../import-export/geojson-import.strategy';
+import { GpxImportStrategy } from '../import-export/gpx-import.strategy';
+import { WktImportStrategy } from '../import-export/wkt-import.strategy';
+import { ExportStrategy } from '../import-export/interfaces/export-strategy.interface';
+import { KmlExportStrategy } from '../import-export/kml-export.strategy';
 
 
 @Injectable({
@@ -22,7 +24,7 @@ import { WktImportStrategy } from '../imports/wkt-import.strategy';
 export class GeoDataService {
   private readonly dataSignal = signal<ImportedGeoData | null>(null);
 
-  private readonly strategies: ImportStrategy[] = [
+  private readonly _importStrategies: ImportStrategy[] = [
     new KmlImportStrategy(),
     new ShpImportStrategy(),
     new GeojsonImportStrategy(),
@@ -31,6 +33,10 @@ export class GeoDataService {
     // new DxfImportStrategy()
   ];
 
+  private readonly _exportStrategies: ExportStrategy[] = [
+    new KmlExportStrategy(),
+  ]
+
   currentData() {
     return this.dataSignal();
   }
@@ -38,18 +44,29 @@ export class GeoDataService {
   setData(data: ImportedGeoData) {
     this.dataSignal.set(data);
   }
-  
+
   async import(file: File): Promise<void> {
     const ext = file.name.split('.').pop()?.toLowerCase();
 
-    const strategy = this.strategies.find(s => s.type === ext);
+    const strategy = this._importStrategies.find(s => s.type === ext);
 
-    if (!strategy) {
-      throw new Error(`Unsupported file type: ${ext}`);
-    }
+    if (!strategy) throw new Error(`Unsupported file type: ${ext}`);
 
     const data = await strategy.import(file);
     this.dataSignal.set(data);
+  }
+
+  export(type: string): Blob {
+    const data = this.dataSignal();
+    if (!data) {
+      throw new Error('No geo data loaded');
+    }
+
+    const strategy = this._exportStrategies.find(s => s.type === type);
+
+    if (!strategy) throw new Error(`Export strategy not found: ${type}`);
+    
+    return strategy.export(data);
   }
 
 }

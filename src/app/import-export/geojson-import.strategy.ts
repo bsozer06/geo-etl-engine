@@ -1,6 +1,6 @@
 import { FeatureCollection } from "geojson";
 import { ImportedGeoData } from "../models/imported-geodata.model";
-import { ImportStrategy } from "./import-strategy.interface";
+import { ImportStrategy } from "./interfaces/import-strategy.interface";
 
 export class GeojsonImportStrategy implements ImportStrategy {
     readonly type = 'geojson';

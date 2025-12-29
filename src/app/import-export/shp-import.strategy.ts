@@ -2,7 +2,7 @@ import shp from 'shpjs';
 import JSZip from 'jszip';
 import { ProjectionHelper } from '../helpers/projection.helper';
 import { ImportedGeoData } from '../models/imported-geodata.model';
-import { ImportStrategy } from './import-strategy.interface';
+import { ImportStrategy } from './interfaces/import-strategy.interface';
 
 export class ShpImportStrategy implements ImportStrategy {
 

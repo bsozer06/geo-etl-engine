@@ -1,4 +1,4 @@
-import { ImportedGeoData } from '../models/imported-geodata.model';
+import { ImportedGeoData } from '../../models/imported-geodata.model';
 
 export interface ImportStrategy {
   readonly type: string;
