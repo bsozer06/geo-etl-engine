@@ -57,10 +57,10 @@ export class MapViewerComponent {
     this._initializeMap();
   }
 
-  export(format: string): void {
+  async export(format: string): Promise<void> {
     try {
       if (format === 'kml' || format === 'gpx' || format === 'shp') {
-        const blob = this.geoDataService.export(format);
+        const blob = await this.geoDataService.export(format);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

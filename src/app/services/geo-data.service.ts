@@ -16,6 +16,7 @@ import { GpxImportStrategy } from '../import-export/gpx-import.strategy';
 import { WktImportStrategy } from '../import-export/wkt-import.strategy';
 import { ExportStrategy } from '../import-export/interfaces/export-strategy.interface';
 import { KmlExportStrategy } from '../import-export/kml-export.strategy';
+import { ShpExportStrategy } from '../import-export/shp-export.strategy';
 
 
 @Injectable({
@@ -35,6 +36,7 @@ export class GeoDataService {
 
   private readonly _exportStrategies: ExportStrategy[] = [
     new KmlExportStrategy(),
+    new ShpExportStrategy()
   ]
 
   currentData() {
@@ -56,17 +58,20 @@ export class GeoDataService {
     this.dataSignal.set(data);
   }
 
-  export(type: string): Blob {
+  async export(type: string): Promise<Blob> {
     const data = this.dataSignal();
     if (!data) {
       throw new Error('No geo data loaded');
+    }
+    if (type === 'shp') {
+      type = 'zip';
     }
 
     const strategy = this._exportStrategies.find(s => s.type === type);
 
     if (!strategy) throw new Error(`Export strategy not found: ${type}`);
     
-    return strategy.export(data);
+    return await strategy.export(data);
   }
 
 }

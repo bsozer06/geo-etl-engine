@@ -11,7 +11,7 @@ export class KmlExportStrategy implements ExportStrategy {
 
   readonly type = 'kml';
 
-  export(data: ImportedGeoData): Blob {
+  export(data: ImportedGeoData): Promise<Blob> {
     const geojsonFormat = new GeoJSON();
 
     // GeoJSON → OL Features
@@ -27,8 +27,12 @@ export class KmlExportStrategy implements ExportStrategy {
       featureProjection: 'EPSG:4326'
     });
 
-    return new Blob([kmlText], {
+    const blob = new Blob([kmlText], {
       type: 'application/vnd.google-earth.kml+xml'
-    });
+    })
+
+    const pr = Promise.resolve(blob);
+
+    return pr
   }
 }
