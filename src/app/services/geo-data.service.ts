@@ -63,9 +63,6 @@ export class GeoDataService {
     if (!data) {
       throw new Error('No geo data loaded');
     }
-    if (type === 'shp') {
-      type = 'zip';
-    }
 
     const strategy = this._exportStrategies.find(s => s.type === type);
 

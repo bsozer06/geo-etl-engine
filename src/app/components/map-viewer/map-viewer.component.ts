@@ -59,7 +59,7 @@ export class MapViewerComponent {
 
   async export(format: string): Promise<void> {
     try {
-      if (format === 'kml' || format === 'gpx' || format === 'shp') {
+      if (format === 'kml' || format === 'gpx' || format === 'zip') {
         const blob = await this.geoDataService.export(format);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
