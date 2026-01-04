@@ -17,6 +17,7 @@ import { WktImportStrategy } from '../import-export/wkt-import.strategy';
 import { ExportStrategy } from '../import-export/interfaces/export-strategy.interface';
 import { KmlExportStrategy } from '../import-export/kml-export.strategy';
 import { ShpExportStrategy } from '../import-export/shp-export.strategy';
+import { GeojsonExportStrategy } from '../import-export/geojson-export.strategy';
 
 
 @Injectable({
@@ -36,7 +37,8 @@ export class GeoDataService {
 
   private readonly _exportStrategies: ExportStrategy[] = [
     new KmlExportStrategy(),
-    new ShpExportStrategy()
+    new ShpExportStrategy(),
+    new GeojsonExportStrategy()
   ]
 
   currentData() {
