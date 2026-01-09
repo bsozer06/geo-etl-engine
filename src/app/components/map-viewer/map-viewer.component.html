@@ -1,17 +1,39 @@
-<div class="map-wrapper">
+<!-- <div class="map-wrapper"> -->
+<div class="relative w-full h-full font-sans">
 
-  <div #mapContainer class="map-container"></div>
-  <app-upload class="map-overlay"></app-upload>
-  
+  <!-- <div #mapContainer class="map-container"></div> -->
+  <div #mapContainer class="w-full h-screen"></div>
+  <!-- <app-upload class="map-overlay"></app-upload> -->
+  <app-upload class="absolute top-[35px] right-[220px] z-10 bg-white/95 rounded-md shadow"></app-upload>
   <!-- Overlay controls -->
-  <div class="map-overlay-controls">
-    <select #format>
+  <!-- <div class="map-overlay-controls"> -->
+  <div class="
+      absolute top-5 right-5 z-15
+      flex items-center gap-2.5
+      bg-white/95
+      px-4 py-2.5
+      rounded-xl
+      shadow-lg
+      transition-all duration-300
+      hover:-translate-y-0.5
+      hover:shadow-xl
+    ">
+    <select #format class="
+      px-3 py-1.5 text-sm rounded-md
+      bg-gray-100 hover:bg-gray-200
+      focus:outline-none
+    ">
       <option value="kml">KML</option>
       <option value="gpx">GPX</option>
       <option value="zip">SHP</option>
       <option value="geojson">GeoJson</option>
     </select>
-    <button (click)="export(format.value)">Export</button>
+    <button class="
+      px-3 py-1.5 text-sm rounded-md
+      bg-blue-600 text-white
+      hover:bg-blue-700
+      transition-colors
+    " (click)="export(format.value)">Export</button>
   </div>
-  
+
 </div>
