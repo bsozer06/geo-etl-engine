@@ -1,39 +1,70 @@
-<!-- <div class="map-wrapper"> -->
 <div class="relative w-full h-full font-sans">
 
-  <!-- <div #mapContainer class="map-container"></div> -->
   <div #mapContainer class="w-full h-screen"></div>
-  <!-- <app-upload class="map-overlay"></app-upload> -->
-  <app-upload class="absolute top-[35px] right-[220px] z-10 bg-white/95 rounded-md shadow"></app-upload>
-  <!-- Overlay controls -->
-  <!-- <div class="map-overlay-controls"> -->
+
+  <app-upload
+    class="absolute top-5 right-32 z-10 bg-white/95 rounded-md shadow">
+  </app-upload>
+    <!-- class="absolute top-[35px] right-[220px] z-10 bg-white/95 rounded-md shadow"> -->
+
+  <!-- EXPORT CONTROL -->
   <div class="
-      absolute top-5 right-5 z-15
-      flex items-center gap-2.5
+      absolute top-5 right-5 z-20
+      flex items-center
       bg-white/95
-      px-4 py-2.5
-      rounded-xl
-      shadow-lg
-      transition-all duration-300
-      hover:-translate-y-0.5
-      hover:shadow-xl
+      rounded-md
+      shadow-md
     ">
-    <select #format class="
-      px-3 py-1.5 text-sm rounded-md
-      bg-gray-100 hover:bg-gray-200
-      focus:outline-none
-    ">
-      <option value="kml">KML</option>
-      <option value="gpx">GPX</option>
-      <option value="zip">SHP</option>
-      <option value="geojson">GeoJson</option>
-    </select>
-    <button class="
-      px-3 py-1.5 text-sm rounded-md
-      bg-blue-600 text-white
-      hover:bg-blue-700
-      transition-colors
-    " (click)="export(format.value)">Export</button>
+
+    <!-- 🔑 Relative wrapper -->
+    <div class="relative">
+
+      <!-- EXPORT BUTTON -->
+      <button
+        class="bg-blue-600 text-white px-4 py-2 rounded-md
+               font-semibold shadow hover:bg-blue-700
+               flex items-center justify-center"
+        (click)="toggleExportMenu()">
+
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v10m0 0l-4-4m4 4l4-4"
+                stroke="currentColor" stroke-width="3" />
+          <path d="M5 19h14"
+                stroke="currentColor" stroke-width="3" />
+        </svg>
+        Export
+      </button>
+
+      <!-- DROPDOWN (BUTONUN ALTINDA) -->
+      <div
+        *ngIf="showExportMenu"
+        class="
+          absolute top-full right-0 mt-2
+          bg-white rounded-lg shadow-lg border
+          flex flex-col overflow-hidden
+          z-50 min-w-[140px]
+        ">
+
+        <button
+          class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium"
+          (click)="export('kml')">
+          🌍 KML
+        </button>
+
+        <button
+          class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium"
+          (click)="export('gpx')">
+          🧭 GPX
+        </button>
+
+        <button
+          class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium"
+          (click)="export('shp')">
+          🗺️ SHP
+        </button>
+      </div>
+
+    </div>
   </div>
 
 </div>

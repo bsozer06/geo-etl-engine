@@ -13,12 +13,13 @@ import CircleStyle from 'ol/style/Circle';
 import { FeatureLike } from 'ol/Feature';
 import { buffer } from 'ol/extent';
 import { isEmpty } from 'ol/extent';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-map-viewer',
   standalone: true,
-  imports: [UploadComponent],
+  imports: [UploadComponent, CommonModule],
   templateUrl: './map-viewer.component.html',
   styleUrl: './map-viewer.component.scss',
 })
@@ -28,6 +29,7 @@ export class MapViewerComponent {
   map!: Map;
   vectorSource!: VectorSource;
   public static readonly BASEMAP_CRS = 'EPSG:3857';
+showExportMenu = false;
 
   constructor(private geoDataService: GeoDataService) {
 
@@ -73,6 +75,10 @@ export class MapViewerComponent {
       alert(err instanceof Error ? err.message : 'Export failed');
     }
   }
+
+  toggleExportMenu() {
+  this.showExportMenu = !this.showExportMenu;
+}
 
   private _initializeMap(): void {
     this.vectorSource = new VectorSource();
