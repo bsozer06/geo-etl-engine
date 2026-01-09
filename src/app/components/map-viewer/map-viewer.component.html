@@ -2,10 +2,8 @@
 
   <div #mapContainer class="w-full h-screen"></div>
 
-  <app-upload
-    class="absolute top-5 right-32 z-10 bg-white/95 rounded-md shadow">
+  <app-upload class="absolute top-5 right-16 z-10 bg-white/95 rounded-md shadow">
   </app-upload>
-    <!-- class="absolute top-[35px] right-[220px] z-10 bg-white/95 rounded-md shadow"> -->
 
   <!-- EXPORT CONTROL -->
   <div class="
@@ -17,49 +15,63 @@
     ">
 
     <!-- 🔑 Relative wrapper -->
-    <div class="relative">
+    <div class="relative inline-flex group">
 
       <!-- EXPORT BUTTON -->
-      <button
-        class="bg-blue-600 text-white px-4 py-2 rounded-md
-               font-semibold shadow hover:bg-blue-700
-               flex items-center justify-center"
-        (click)="toggleExportMenu()">
+      <button class="
+        flex items-center justify-center
+        w-10 h-10
+        rounded-md
+        bg-blue-600 text-white
+        shadow-sm
+        hover:bg-blue-700
+        transition" (click)="toggleExportMenu()">
 
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
-          <path d="M12 5v10m0 0l-4-4m4 4l4-4"
-                stroke="currentColor" stroke-width="3" />
-          <path d="M5 19h14"
-                stroke="currentColor" stroke-width="3" />
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+          width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 10V4a1 1 0 0 0-1-1H9.914a1 1 0 0 0-.707.293L5.293 7.207A1 1 0 0 0 5 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2M10 3v4a1 1 0 0 1-1 1H5m5 6h9m0 0-2-2m2 2-2 2" />
         </svg>
-        Export
+        <!-- <span>Export</span> -->
       </button>
 
+     <!-- Tooltip -->
+  <div
+    class="
+      absolute top-full mt-2
+      left-1/2 -translate-x-1/2
+      px-3 py-2
+      text-xs font-medium
+      text-white bg-gray-900
+      rounded
+      opacity-0
+      group-hover:opacity-100
+      transition-opacity duration-200
+      pointer-events-none
+      whitespace-nowrap
+      z-[9999]
+    "
+  >
+    Export
+  </div>
+
       <!-- DROPDOWN (BUTONUN ALTINDA) -->
-      <div
-        *ngIf="showExportMenu"
-        class="
+      <div *ngIf="showExportMenu" class="
           absolute top-full right-0 mt-2
           bg-white rounded-lg shadow-lg border
           flex flex-col overflow-hidden
           z-50 min-w-[140px]
         ">
 
-        <button
-          class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium"
-          (click)="export('kml')">
+        <button class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium" (click)="export('kml')">
           🌍 KML
         </button>
 
-        <button
-          class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium"
-          (click)="export('geojson')">
+        <button class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium" (click)="export('geojson')">
           🧭 GeoJson
         </button>
 
-        <button
-          class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium"
-          (click)="export('zip')">
+        <button class="px-4 py-2 text-left hover:bg-gray-100 text-sm font-medium" (click)="export('zip')">
           🗺️ SHP
         </button>
       </div>
