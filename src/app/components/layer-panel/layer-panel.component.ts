@@ -4,6 +4,7 @@ import { BasemapService } from '../../services/basemap.service';
 import { LayerService } from '../../services/layer.service';
 import { Basemap } from '../../models/basemap.model';
 import { MapLayer } from '../../models/maplayer.model';
+import { MapViewerService } from '../../services/map-viewer.service';
 
 @Component({
   selector: 'app-layer-panel',
@@ -15,14 +16,14 @@ import { MapLayer } from '../../models/maplayer.model';
 export class LayerPanelComponent {
   basemapService = inject(BasemapService);
   layerService = inject(LayerService)
-
+  mapViewerService = inject(MapViewerService);
+  
   basemaps = this.basemapService.getBasemaps();
   layers = this.layerService.getLayers();
   activeBasemapId = this.basemapService.getActive();
   activeLayer = this.layerService.getActive();
   
   constructor(
-    // private mapService: MapService
   ) {}
 
   activateBasemap(bm: Basemap) {
@@ -40,12 +41,12 @@ export class LayerPanelComponent {
   zoom(layer: MapLayer) {
     const extent = layer.layer.getSource()?.getExtent();
     if (extent) {
-      this.mapService.zoomToExtent(extent);
+      this.mapViewerService.zoomToExtent(extent);
     }
   }
 
   remove(layer: MapLayer) {
-    this.mapService.removeLayer(layer.layer);
+    this.mapViewerService.removeLayer(layer.layer);
     this.layerService.remove(layer.id);
   }
 }
