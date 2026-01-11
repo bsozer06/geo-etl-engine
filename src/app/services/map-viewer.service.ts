@@ -14,9 +14,7 @@ export class MapViewerService {
   }
 
   getMap(): Map {
-    if (!this._map) {
-      throw new Error('Map is not initialized');
-    }
+    if (!this._map) throw new Error('Map is not initialized');
     return this._map;
   }
 
@@ -28,7 +26,15 @@ export class MapViewerService {
     this.getMap().removeLayer(layer);
   }
 
-  zoomToExtent(extent: Extent) {
+  setVisibility(layer: BaseLayer, visible: boolean) {
+    layer.setVisible(visible);
+  }
+
+  zoomToLayer(layer: BaseLayer) {
+    const source = (layer as any).getSource?.();
+    if (!source) return;
+
+    const extent = source.getExtent();
     this.getMap().getView().fit(extent, {
       padding: [40, 40, 40, 40],
       duration: 400

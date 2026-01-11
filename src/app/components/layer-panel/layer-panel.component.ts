@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { BasemapService } from '../../services/basemap.service';
 import { LayerService } from '../../services/layer.service';
 import { Basemap } from '../../models/basemap.model';
-import { MapLayer } from '../../models/maplayer.model';
+import { MapLayer } from '../../models/map-layer.model';
 import { MapViewerService } from '../../services/map-viewer.service';
 
 @Component({

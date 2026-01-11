@@ -14,6 +14,7 @@ import { FeatureLike } from 'ol/Feature';
 import { buffer } from 'ol/extent';
 import { isEmpty } from 'ol/extent';
 import { CommonModule } from '@angular/common';
+import { MapViewerService } from '../../services/map-viewer.service';
 
 
 @Component({
@@ -29,9 +30,11 @@ export class MapViewerComponent {
   map!: Map;
   vectorSource!: VectorSource;
   public static readonly BASEMAP_CRS = 'EPSG:3857';
-showExportMenu = false;
+  showExportMenu = false;
 
-  constructor(private geoDataService: GeoDataService) {
+  constructor(
+    private geoDataService: GeoDataService,
+    private _mapViewerService: MapViewerService) {
 
     effect(() => {
       const data = this.geoDataService.currentData();
@@ -77,8 +80,8 @@ showExportMenu = false;
   }
 
   toggleExportMenu() {
-  this.showExportMenu = !this.showExportMenu;
-}
+    this.showExportMenu = !this.showExportMenu;
+  }
 
   private _initializeMap(): void {
     this.vectorSource = new VectorSource();
@@ -102,6 +105,7 @@ showExportMenu = false;
         projection: MapViewerComponent.BASEMAP_CRS
       })
     });
+    this._mapViewerService.setMap(this.map);
 
   }
 
