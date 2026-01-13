@@ -1,43 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import Map from 'ol/Map';
 import { Extent } from 'ol/extent';
 import BaseLayer from 'ol/layer/Base';
+import TileLayer from 'ol/layer/Tile';
+import TileSource from 'ol/source/Tile';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapViewerService {
-   private _map?: Map;
+    private readonly _map = signal<Map | null>(null);
+
+    map = this._map.asReadonly();
 
   setMap(map: Map) {
-    this._map = map;
+    this._map.set(map);
   }
 
   getMap(): Map {
-    if (!this._map) throw new Error('Map is not initialized');
-    return this._map;
+    return this.map()!;
   }
 
-  addLayer(layer: BaseLayer) {
-    this.getMap().addLayer(layer);
+  getLayersByType(type: 'basemap' | 'vector') {
+    return this.map()!
+      .getLayers()
+      .getArray()
+      .filter(l => l.get('type') === type);
   }
 
-  removeLayer(layer: BaseLayer) {
-    this.getMap().removeLayer(layer);
-  }
-
-  setVisibility(layer: BaseLayer, visible: boolean) {
-    layer.setVisible(visible);
-  }
-
-  zoomToLayer(layer: BaseLayer) {
-    const source = (layer as any).getSource?.();
-    if (!source) return;
-
-    const extent = source.getExtent();
-    this.getMap().getView().fit(extent, {
-      padding: [40, 40, 40, 40],
-      duration: 400
-    });
-  }
 }

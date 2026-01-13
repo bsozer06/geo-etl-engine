@@ -1,51 +1,102 @@
 <div class="
-  absolute top-20 left-5 z-20
-  w-72
-  bg-white/95
-  rounded-lg shadow-lg border
-">
+    absolute top-20 left-5 z-20
+    w-72
+    bg-white/95 backdrop-blur
+    rounded-xl shadow-lg border
+    text-gray-800
+    z-20
+  ">
 
-    <!-- BASEMAP -->
-    <div class="border-b">
-        <div class="px-4 py-2 text-sm font-semibold">Basemap</div>
+  <!-- HEADER -->
+  <div class="px-4 py-3 border-b font-semibold text-sm flex items-center gap-2">
+    🧱 Layers
+  </div>
 
-        <div class="px-4 pb-2 space-y-1">
-            <button *ngFor="let bm of basemaps" (click)="activateBasemap(bm)" class="
-          w-full text-left px-3 py-1.5 rounded
-          text-sm
-          hover:bg-gray-100
-        " [class.bg-blue-100]="bm.id === activeBasemapId()">
-                🗺️ {{ bm.name }}
-            </button>
-        </div>
+  <!-- BASEMAP SECTION -->
+  <div class="border-b">
+    <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+      Basemap
+    </div>
+    <div *ngFor="let bm of basemaps()">
+      {{ bm.get('name') }}
     </div>
 
-    <!-- VECTOR LAYERS -->
-    <div>
-        <div class="px-4 py-2 text-sm font-semibold">Layers</div>
+    <!-- <div class="px-3 pb-3 space-y-1">
+      <button
+        *ngFor="let bm of basemaps"
+        (click)="setBasemap(bm.id)"
+        class="
+          w-full flex items-center gap-2
+          px-3 py-2 rounded-md
+          text-sm
+          transition
+          hover:bg-gray-100
+        "
+        [class.bg-blue-100]="bm.id === activeBasemapId()"
+        [class.font-semibold]="bm.id === activeBasemapId()"
+      >
+        🗺️ {{ bm.name }}
+      </button>
+    </div> -->
+  </div>
 
-        <div class="max-h-72 overflow-y-auto">
+  <!-- VECTOR LAYERS -->
+  <div>
+    <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+      Vector Layers
+    </div>
+    <div *ngFor="let layer of layers()">
+      {{ layer.get('name') }}
+    </div>
 
-            <div *ngFor="let layer of layers()" class="
+    <!-- <div class="max-h-72 overflow-y-auto divide-y">
+
+      <div
+        *ngFor="let layer of layers"
+        class="
           flex items-center justify-between
           px-4 py-2
           text-sm
-          hover:bg-gray-100
-        ">
-                <div class="flex items-center gap-2">
-                    <button (click)="toggle(layer)">👁️</button>
-                    <span (click)="setActive(layer)" class="cursor-pointer truncate max-w-[120px]"
-                        [class.font-semibold]="layer.id === activeLayer()?.id">
-                        {{ layer.name }}
-                    </span>
-                </div>
+          hover:bg-gray-50
+        "
+      >
+        <div class="flex items-center gap-2 min-w-0">
+          <button
+            class="hover:text-blue-600"
+            (click)="toggleVisibility(layer.id)"
+            [title]="layer.visible ? 'Hide layer' : 'Show layer'"
+          >
+            {{ layer.visible ? '👁️' : '🚫' }}
+          </button>
 
-                <div class="flex gap-2">
-                    <button (click)="zoom(layer)">🔍</button>
-                    <button (click)="remove(layer)">❌</button>
-                </div>
-            </div>
-
+          <span
+            class="cursor-pointer truncate"
+            (click)="setActiveLayer(layer.id)"
+            [class.font-semibold]="layer.id === activeLayerId()"
+          >
+            {{ layer.name }}
+          </span>
         </div>
-    </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            class="hover:text-blue-600"
+            title="Zoom to layer"
+            (click)="zoomToLayer(layer.id)"
+          >
+            🔍
+          </button>
+
+          <button
+            class="hover:text-red-500"
+            title="Remove layer"
+            (click)="removeLayer(layer.id)"
+          >
+            ❌
+          </button>
+        </div>
+      </div>
+
+    </div> -->
+  </div>
 </div>

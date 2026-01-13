@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { BasemapService } from '../../services/basemap.service';
-import { LayerService } from '../../services/layer.service';
+import { Component, computed, inject } from '@angular/core';
 import { Basemap } from '../../models/basemap.model';
 import { MapLayer } from '../../models/map-layer.model';
 import { MapViewerService } from '../../services/map-viewer.service';
@@ -14,40 +12,51 @@ import { MapViewerService } from '../../services/map-viewer.service';
   styleUrl: './layer-panel.component.scss',
 })
 export class LayerPanelComponent {
-  basemapService = inject(BasemapService);
-  layerService = inject(LayerService)
-  mapViewerService = inject(MapViewerService);
+  mapService = inject(MapViewerService);
+
+  basemaps = computed(() => {
+    const map = this.mapService.getMap();
+    if (!map) return [];
+    const bm = map.getLayers().getArray().filter(l => l.get('type') === 'basemap');
+    console.log('bm', bm);
+    return bm;
+  });
+
+  layers = computed(() => {
+    const map = this.mapService.getMap();
+    if (!map) return [];
+    const lyr = map.getLayers().getArray().filter(l => l.get('type') === 'vector');
+    console.log('layers', lyr);
+    return lyr;
+  });
+
   
-  basemaps = this.basemapService.getBasemaps();
-  layers = this.layerService.getLayers();
-  activeBasemapId = this.basemapService.getActive();
-  activeLayer = this.layerService.getActive();
-  
-  constructor(
-  ) {}
+  // layerFacade = inject(LayerFacadeService);
+  // basemaps = this.layerFacade.basemaps;
+  // layers = this.layerFacade.layers;
 
-  activateBasemap(bm: Basemap) {
-    this.basemapService.activate(bm.id);
-  }
+  // activeBasemapId = this.layerFacade.activeBasemapId;
 
-  toggle(layer: MapLayer) {
-    this.layerService.toggle(layer.id);
-  }
+  // constructor() { }
 
-  setActive(layer: MapLayer) {
-    this.layerService.setActive(layer.id);
-  }
+  // setBasemap(id: string) {
+  //   this.layerFacade.setBasemap(id);
+  // }
 
-  zoom(layer: MapLayer) {
-    const extent = layer.layer.getSource()?.getExtent();
-    if (extent) {
-      this.mapViewerService.zoomToExtent(extent);
-    }
-  }
+  // toggleVisibility(layer: MapLayer) {
+  //   this.layerFacade.toggleVisibility(layer);
+  // }
 
-  remove(layer: MapLayer) {
-    this.mapViewerService.removeLayer(layer.layer);
-    this.layerService.remove(layer.id);
-  }
+  // zoomToLayer(layer: MapLayer) {
+  //   this.layerFacade.zoom(layer);
+  // }
+
+  // removeLayer(layer: MapLayer) {
+  //   this.layerFacade.remove(layer);
+  // }
+
+  // // setActiveLayer(id: string) {
+  // //   this.layerFacade.setActiveLayer(id);
+  // // }
 }
 
