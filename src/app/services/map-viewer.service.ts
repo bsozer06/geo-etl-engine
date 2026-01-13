@@ -17,10 +17,6 @@ export class MapViewerService {
     this._map.set(map);
   }
 
-  getMap(): Map {
-    return this.map()!;
-  }
-
   getLayersByType(type: 'basemap' | 'vector') {
     return this.map()!
       .getLayers()

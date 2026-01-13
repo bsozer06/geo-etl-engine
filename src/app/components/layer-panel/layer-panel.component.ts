@@ -15,7 +15,7 @@ export class LayerPanelComponent {
   mapService = inject(MapViewerService);
 
   basemaps = computed(() => {
-    const map = this.mapService.getMap();
+    const map = this.mapService.map();
     if (!map) return [];
     const bm = map.getLayers().getArray().filter(l => l.get('type') === 'basemap');
     console.log('bm', bm);
@@ -23,7 +23,7 @@ export class LayerPanelComponent {
   });
 
   layers = computed(() => {
-    const map = this.mapService.getMap();
+    const map = this.mapService.map();
     if (!map) return [];
     const lyr = map.getLayers().getArray().filter(l => l.get('type') === 'vector');
     console.log('layers', lyr);
