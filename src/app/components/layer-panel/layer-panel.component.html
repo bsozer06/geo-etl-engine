@@ -1,102 +1,86 @@
 <div class="
-    absolute top-20 left-5 z-20
-    w-72
-    bg-white/95 backdrop-blur
-    rounded-xl shadow-lg border
-    text-gray-800
-    z-20
+    absolute top-10 right-6 z-20
+    w-64
+    bg-white/85 backdrop-blur-md
+    rounded-xl shadow-xl border border-white/40
+    text-gray-800 overflow-hidden
+    ring-1 ring-black/5
   ">
 
-  <!-- HEADER -->
-  <div class="px-4 py-3 border-b font-semibold text-sm flex items-center gap-2">
-    🧱 Layers
+  <div class="px-3 py-2.5 bg-gray-50/50 border-b flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-sm">🧱</span>
+      <span class="font-bold text-xs tracking-tight text-gray-700">Map Layers</span>
+    </div>
+    <span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">GIS</span>
   </div>
 
-  <!-- BASEMAP SECTION -->
-  <div class="border-b">
-    <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+  <div class="p-1.5 border-b">
+    <div class="px-2 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
       Basemap
     </div>
-    <div *ngFor="let bm of basemaps()">
-      {{ bm.get('name') }}
-    </div>
-
-    <!-- <div class="px-3 pb-3 space-y-1">
+    
+    <div class="space-y-0.5">
       <button
-        *ngFor="let bm of basemaps"
-        (click)="setBasemap(bm.id)"
+        *ngFor="let bm of basemaps()"
         class="
-          w-full flex items-center gap-2
-          px-3 py-2 rounded-md
-          text-sm
-          transition
-          hover:bg-gray-100
+          group w-full flex items-center gap-2
+          px-2 py-1.5 rounded-lg
+          text-xs font-medium transition-all
+          hover:bg-blue-50 hover:text-blue-700
+          active:scale-[0.97]
         "
-        [class.bg-blue-100]="bm.id === activeBasemapId()"
-        [class.font-semibold]="bm.id === activeBasemapId()"
       >
-        🗺️ {{ bm.name }}
+        <span class="opacity-70 group-hover:opacity-100">🗺️</span>
+        {{ bm.get('name') }}
       </button>
-    </div> -->
+    </div>
   </div>
 
-  <!-- VECTOR LAYERS -->
-  <div>
-    <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-      Vector Layers
-    </div>
-    <div *ngFor="let layer of layers()">
-      {{ layer.get('name') }}
+  <div class="p-1.5">
+    <div class="px-2 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+      Data Layers
     </div>
 
-    <!-- <div class="max-h-72 overflow-y-auto divide-y">
-
+    <div class="max-h-52 overflow-y-auto space-y-0.5 px-0.5 custom-scrollbar">
       <div
-        *ngFor="let layer of layers"
+        *ngFor="let layer of layers()"
         class="
-          flex items-center justify-between
-          px-4 py-2
-          text-sm
-          hover:bg-gray-50
+          group flex items-center justify-between
+          px-2 py-1.5 rounded-lg
+          text-xs transition-all
+          hover:bg-gray-100/80
         "
       >
         <div class="flex items-center gap-2 min-w-0">
-          <button
-            class="hover:text-blue-600"
-            (click)="toggleVisibility(layer.id)"
-            [title]="layer.visible ? 'Hide layer' : 'Show layer'"
-          >
-            {{ layer.visible ? '👁️' : '🚫' }}
+          <button class="text-[10px] text-gray-400 hover:text-blue-500">
+            👁️
           </button>
-
-          <span
-            class="cursor-pointer truncate"
-            (click)="setActiveLayer(layer.id)"
-            [class.font-semibold]="layer.id === activeLayerId()"
-          >
-            {{ layer.name }}
+          <span class="truncate text-gray-600 group-hover:text-gray-900">
+            {{ layer.get('name') }}
           </span>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            class="hover:text-blue-600"
-            title="Zoom to layer"
-            (click)="zoomToLayer(layer.id)"
+            class="p-1 hover:text-blue-600 transition-colors"
+            title="Zoom"
           >
             🔍
           </button>
-
           <button
-            class="hover:text-red-500"
-            title="Remove layer"
-            (click)="removeLayer(layer.id)"
+            class="p-1 hover:text-red-500 transition-colors"
+            title="Remove"
           >
-            ❌
+            🗑️
           </button>
         </div>
       </div>
+    </div>
+  </div>
 
-    </div> -->
+  <div class="px-3 py-1.5 bg-gray-50/30 border-t text-[9px] text-gray-400 flex justify-between items-center">
+    <span>Total: {{ layers().length }} layers</span>
+    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
   </div>
 </div>

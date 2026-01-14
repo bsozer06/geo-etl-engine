@@ -30,33 +30,5 @@ export class LayerPanelComponent {
     return lyr;
   });
 
-  
-  // layerFacade = inject(LayerFacadeService);
-  // basemaps = this.layerFacade.basemaps;
-  // layers = this.layerFacade.layers;
-
-  // activeBasemapId = this.layerFacade.activeBasemapId;
-
-  // constructor() { }
-
-  // setBasemap(id: string) {
-  //   this.layerFacade.setBasemap(id);
-  // }
-
-  // toggleVisibility(layer: MapLayer) {
-  //   this.layerFacade.toggleVisibility(layer);
-  // }
-
-  // zoomToLayer(layer: MapLayer) {
-  //   this.layerFacade.zoom(layer);
-  // }
-
-  // removeLayer(layer: MapLayer) {
-  //   this.layerFacade.remove(layer);
-  // }
-
-  // // setActiveLayer(id: string) {
-  // //   this.layerFacade.setActiveLayer(id);
-  // // }
 }
 
