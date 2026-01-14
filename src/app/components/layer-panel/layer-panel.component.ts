@@ -1,0 +1,44 @@
+import { CommonModule } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
+import { Basemap } from '../../models/basemap.model';
+import { MapLayer } from '../../models/map-layer.model';
+import { MapViewerService } from '../../services/map-viewer.service';
+import BaseLayer from 'ol/layer/Base';
+
+@Component({
+  selector: 'app-layer-panel',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './layer-panel.component.html',
+  styleUrl: './layer-panel.component.scss',
+})
+export class LayerPanelComponent {
+  mapService = inject(MapViewerService);
+
+  basemaps = computed(() => {
+    const map = this.mapService.map();
+    if (!map) return [];
+    const bm = map.getLayers().getArray().filter(l => l.get('type') === 'basemap');
+    console.log('bm', bm);
+    return bm;
+  });
+
+  layers = computed(() => {
+    const map = this.mapService.map();
+    if (!map) return [];
+    const lyr = map.getLayers().getArray().filter(l => l.get('type') === 'vector');
+    console.log('layers', lyr);
+    return lyr;
+  });
+
+  setBaseLayerVisibility(baseLayer: BaseLayer) {
+    const layers = this.mapService.getLayersByType('basemap');
+    layers.forEach(layer => {
+      layer.setVisible(false);
+    });
+    baseLayer.setVisible(true);
+   }
+
+
+}
+
