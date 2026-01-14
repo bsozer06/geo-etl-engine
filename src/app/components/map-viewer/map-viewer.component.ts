@@ -18,12 +18,13 @@ import { MapViewerService } from '../../services/map-viewer.service';
 import { XYZ } from 'ol/source';
 import { LayerPanelComponent } from "../layer-panel/layer-panel.component";
 import StadiaMaps from 'ol/source/StadiaMaps';
+import { MousePositionComponent } from "../mouse-position/mouse-position.component";
 
 
 @Component({
   selector: 'app-map-viewer',
   standalone: true,
-  imports: [UploadComponent, CommonModule, LayerPanelComponent],
+  imports: [UploadComponent, CommonModule, LayerPanelComponent, MousePositionComponent],
   templateUrl: './map-viewer.component.html',
   styleUrl: './map-viewer.component.scss',
 })
