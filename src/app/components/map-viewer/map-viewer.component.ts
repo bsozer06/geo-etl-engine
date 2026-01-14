@@ -49,9 +49,6 @@ export class MapViewerComponent {
 
       if (!data || !this.vectorSource) return;
 
-      // const geojson = data.geojson;
-      // const dataCrs = data.crs ?? 'EPSG:4326'; // ⬅️ fallback
-
       const features = new GeoJSON().readFeatures(data.geojson, {
         dataProjection: data.crs ?? 'EPSG:4326', // ⬅️ fallback
         featureProjection: MapViewerComponent.BASEMAP_CRS
@@ -60,7 +57,6 @@ export class MapViewerComponent {
       this.vectorSource.clear();
       this.vectorSource.addFeatures(features);
 
-      // this._zoomToFeatures();
     });
 
   }
@@ -97,7 +93,8 @@ export class MapViewerComponent {
       target: this.mapContainer.nativeElement,
       layers: [
         ...this._createBasemaps(),
-        this._createVectorLayer()
+        this._createVectorLayer(),
+        this._createDrawingVectorLayer()
       ],
       view: new View({
         center: [0, 0],
@@ -114,32 +111,6 @@ export class MapViewerComponent {
     console.log('style called for:', type);
     return this._styleCache[type ?? 'Point'];
   };
-
-  // private _zoomToFeatures(): void {
-  //   const source = this.vectorSource;
-
-  //   if (!source) return;
-
-  //   let extent = source.getExtent();
-
-  //   // if (!extent || extent.some(v => !isFinite(v))) return;
-  //   if (isEmpty(extent)) return;
-
-  //   // Point / very small geometry fix
-  //   if (
-  //     extent[0] === extent[2] &&
-  //     extent[1] === extent[3]
-  //   ) {
-  //     extent = buffer(extent, 50); // meters (EPSG:3857)
-  //   }
-
-  //   this.map.getView().fit(extent, {
-  //     padding: [40, 40, 40, 40],
-  //     duration: 600,
-  //     maxZoom: 17
-  //   })
-
-  // }
 
   private readonly _styleCache: Record<string, Style> = {
     Point: new Style({
@@ -183,6 +154,22 @@ export class MapViewerComponent {
     layer.setProperties({
       id: 'imported',
       name: 'Imported Data',
+      type: 'vector',
+      removable: true
+    });
+
+    return layer;
+  }
+
+  private _createDrawingVectorLayer(): VectorLayer {
+    const layer = new VectorLayer({
+      source: this.vectorSource,
+      style: this._styleByGeometryType
+    });
+
+    layer.setProperties({
+      id: 'drawing',
+      name: 'Drawing Data',
       type: 'vector',
       removable: true
     });
