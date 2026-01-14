@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { MapViewerService } from '../../services/map-viewer.service';
 import { XYZ } from 'ol/source';
 import { LayerPanelComponent } from "../layer-panel/layer-panel.component";
+import StadiaMaps from 'ol/source/StadiaMaps';
 
 
 @Component({
@@ -202,15 +203,16 @@ export class MapViewerComponent {
     });
 
     const dark = new TileLayer({
-      source: new XYZ({
-        url: 'https://tiles.stadiamaps.com/tiles/alidade_dark/{z}/{x}/{y}.png'
+      source: new StadiaMaps({
+        layer: 'alidade_smooth_dark',
+        retina: true,
       }),
       visible: false
     });
 
     dark.setProperties({
-      id: 'dark',
-      name: 'Dark',
+      id: 'Stadia Maps Dark',
+      name: 'Stadia Maps Dark',
       type: 'basemap',
       removable: false
     });

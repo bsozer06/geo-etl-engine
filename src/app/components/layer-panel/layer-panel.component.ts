@@ -3,6 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { Basemap } from '../../models/basemap.model';
 import { MapLayer } from '../../models/map-layer.model';
 import { MapViewerService } from '../../services/map-viewer.service';
+import BaseLayer from 'ol/layer/Base';
 
 @Component({
   selector: 'app-layer-panel',
@@ -29,6 +30,15 @@ export class LayerPanelComponent {
     console.log('layers', lyr);
     return lyr;
   });
+
+  setBaseLayerVisibility(baseLayer: BaseLayer) {
+    const layers = this.mapService.getLayersByType('basemap');
+    layers.forEach(layer => {
+      layer.setVisible(false);
+    });
+    baseLayer.setVisible(true);
+   }
+
 
 }
 

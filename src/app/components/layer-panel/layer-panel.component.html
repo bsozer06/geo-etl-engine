@@ -12,7 +12,7 @@
       <span class="text-sm">🧱</span>
       <span class="font-bold text-xs tracking-tight text-gray-700">Map Layers</span>
     </div>
-    <span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">GIS</span>
+    <!-- <span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">GeoEtlEngine</span> -->
   </div>
 
   <div class="p-1.5 border-b">
@@ -23,6 +23,7 @@
     <div class="space-y-0.5">
       <button
         *ngFor="let bm of basemaps()"
+        (click)="setBaseLayerVisibility(bm)"
         class="
           group w-full flex items-center gap-2
           px-2 py-1.5 rounded-lg
