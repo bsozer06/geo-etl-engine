@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { MapViewerService } from '../../services/map-viewer.service';
 import Map from 'ol/Map';
+import { toLonLat } from 'ol/proj';
+import { format } from 'ol/coordinate';
 
 @Component({
   selector: 'app-mouse-position',
@@ -9,30 +11,38 @@ import Map from 'ol/Map';
   templateUrl: './mouse-position.component.html',
   styleUrl: './mouse-position.component.scss',
 })
-export class MousePositionComponent {
-  map: Map | null; 
-  
+export class MousePositionComponent {  
   formattedCoords: string = '00.0000, 00.0000';
+  private ticking = false;
 
-  constructor(mapService: MapViewerService) {
-    this.map = mapService.map();
-  }
+  constructor(private _mapService: MapViewerService) {
+    effect(() => {
+      const mapInstance = this._mapService.map(); 
 
-  ngOnInit(): void {
-    if (!this.map) return;
-
-    // Harita üzerindeki fare hareketlerini dinle
-    this.map.on('pointermove', (event) => {
-      if (!this.map) return;
-      const coords = this.map.getCoordinateFromPixel(event.pixel);
-      if (coords) {
-        // Harita projeksiyonunu (örn: EPSG:3857) standart coğrafi koordinata (EPSG:4323) dönüştür
-        console.log(coords);
-        
-        // const lonLat = toLonLat(coords);
-        // // Format: Enlem, Boylam (virgülden sonra 4 basamak)
-        // this.formattedCoords = format(lonLat, '{y}, {x}', 4);
+      if (mapInstance) {
+        console.log('Map detected via Signal!');
+        this.initPointerListener(mapInstance);
       }
     });
   }
+  private initPointerListener(map: any): void {
+    map.on('pointermove', (event: any) => {
+     if (!this.ticking) {
+        window.requestAnimationFrame(() => {
+          this._updateCoords(map, event.pixel);
+          this.ticking = false;
+        });
+        this.ticking = true;
+      }
+    });
+  }
+
+  private _updateCoords(map: any, pixel: any): void {
+    const coords = map.getCoordinateFromPixel(pixel);      
+    if (coords) {
+      const lonLat = toLonLat(coords);
+      this.formattedCoords = format(lonLat, '{y}, {x}', 4);
+    }
+  }
+
 }
