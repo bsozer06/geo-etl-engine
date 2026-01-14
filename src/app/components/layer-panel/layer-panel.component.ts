@@ -23,13 +23,7 @@ export class LayerPanelComponent {
     return bm;
   });
 
-  layers = computed(() => {
-    const map = this.mapService.map();
-    if (!map) return [];
-    const lyr = map.getLayers().getArray().filter(l => l.get('type') === 'vector');
-    console.log('layers', lyr);
-    return lyr;
-  });
+  layers = this.mapService.vectorLayers;
 
   setBaseLayerVisibility(baseLayer: BaseLayer) {
     const layers = this.mapService.getLayersByType('basemap');
@@ -39,6 +33,18 @@ export class LayerPanelComponent {
     baseLayer.setVisible(true);
    }
 
+   toggleLayerVisibility(layer: BaseLayer) {
+    const currentVisibility = layer.getVisible();
+    layer.setVisible(!currentVisibility);    
+   }
+   
+   zoomToLayer(layer: BaseLayer) {
+    this.mapService.zoomToVectorLayer(layer);
+   }
+
+   removeLayer(layer: BaseLayer) {
+    this.mapService.removeVectorLayer(layer);
+   }
 
 }
 
