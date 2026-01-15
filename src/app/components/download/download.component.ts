@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { GeoDataService } from '../../services/geo-data.service';
 
 @Component({
@@ -10,9 +10,17 @@ import { GeoDataService } from '../../services/geo-data.service';
   styleUrl: './download.component.scss',
 })
 export class DownloadComponent {
+  private _el = inject(ElementRef); 
   private _geoDataService = inject(GeoDataService);
 
   showExportMenu = signal(false);
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this._el.nativeElement.contains(event.target)) {
+      this.showExportMenu.set(false);
+    }
+  }
 
   toggleExportMenu() {
     this.showExportMenu.update(v => !v);
@@ -20,6 +28,7 @@ export class DownloadComponent {
 
    async export(format: string): Promise<void> {
     try {
+      this.showExportMenu.set(false);
       if (format === 'kml' || format === 'gpx' || format === 'zip' || format === 'geojson') {
         const blob = await this._geoDataService.export(format);
         const url = URL.createObjectURL(blob);
