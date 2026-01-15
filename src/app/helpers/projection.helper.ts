@@ -25,6 +25,29 @@ export class ProjectionHelper {
         return code;
     }
 
+    public static getEpsgCodeFromWkt(wkt: string): string {
+        const normalized = wkt.replace(/\s+/g, '').toUpperCase();
+        // const match = wkt.match(/AUTHORITY\["EPSG","?(\d+)"?\]/i);
+        // if (!match) {
+        //     throw new Error("EPSG code not found in WKT");
+        // }
+        // const code = `EPSG:${match[1]}`;
+        // console.log("Found Epsg code:", code);
+        // return code;
+        if (normalized.includes('GCS_WGS_1984') || normalized.includes('DATUM["D_WGS_1984"]')) {
+            return 'EPSG:4326';
+        }
+
+        if (normalized.includes('WGS_1984_WEB_MERCATOR')) {
+            return 'EPSG:3857';
+        }
+        if (normalized.includes('ITRF_1996')) {
+            return 'EPSG:5254';
+        }
+
+        throw new Error("EPSG code not found in WKT");
+    }
+
     public static transformPoint(point: [number, number], fromProj: string, toProj: string): [number, number] {
         const from = this.getProjection(fromProj);
         const to = this.getProjection(toProj);

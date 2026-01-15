@@ -69,8 +69,25 @@ export class GeoDataService {
     const strategy = this._exportStrategies.find(s => s.type === type);
 
     if (!strategy) throw new Error(`Export strategy not found: ${type}`);
-    
+
     return await strategy.export(data);
   }
+
+  async exportAllData(type: string, overrideGeojson?: any): Promise<Blob> {
+    const strategy = this._exportStrategies.find(s => s.type === type);
+    if (!strategy) throw new Error(`Export strategy not found: ${type}`);
+
+    const dataToExport = overrideGeojson ?
+      { geojson: overrideGeojson, crs: 'EPSG:4326' } :
+      this.dataSignal();
+
+    if (!dataToExport) {
+      throw new Error('No geo data to export');
+    }
+
+    return await strategy.export(dataToExport);
+  }
+
+
 
 }

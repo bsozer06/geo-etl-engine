@@ -50,14 +50,27 @@ export class MapViewerComponent {
       console.log('data signal:', data);
 
       if (!data || !this.importedDataVectorSource) return;
-
-      const features = new GeoJSON().readFeatures(data.geojson, {
-        dataProjection: data.crs ?? MapViewerComponent.FALLBACK_CRS,
-        featureProjection: MapViewerComponent.BASEMAP_CRS
-      });
+      
+      const geojsonFormat = new GeoJSON();
+      let allFeatures: any[] = [];
+      
+      if (Array.isArray(data.geojson)) {
+        data.geojson.forEach(collection => {
+          const features = geojsonFormat.readFeatures(collection, {
+            dataProjection: data.crs,
+            featureProjection: MapViewerComponent.BASEMAP_CRS
+          });
+          allFeatures.push(...features);
+        });
+      } else {
+        allFeatures = geojsonFormat.readFeatures(data.geojson, {
+          dataProjection: data.crs,
+          featureProjection: MapViewerComponent.BASEMAP_CRS
+        });
+      }
 
       this.importedDataVectorSource.clear();
-      this.importedDataVectorSource.addFeatures(features);
+      this.importedDataVectorSource.addFeatures(allFeatures);
 
     });
 

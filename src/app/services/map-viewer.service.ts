@@ -6,6 +6,7 @@ import TileLayer from 'ol/layer/Tile';
 import TileSource from 'ol/source/Tile';
 import { Basemap } from '../models/basemap.model';
 import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +66,29 @@ export class MapViewerService {
         .filter(l => l.get('type') === 'vector');
       this._vectorLayers.set([...layers]);
     }
+  }
+
+  /**
+   * Retrieves the VectorSource from the 'Imported Data' layer.
+   */
+  getImportedSource(): VectorSource {
+    const currentMap = this.map();
+    if (!currentMap) {
+      throw new Error('Map has not been initialized yet.');
+    }
+
+    // Find the layer by the ID we assigned in MapViewerComponent
+    const layers = currentMap.getLayers().getArray();
+    const importedLayer = layers.find(layer => 
+      layer.get('id') === 'imported'
+    ) as VectorLayer<VectorSource>;
+
+    if (!importedLayer) {
+      console.warn('Imported layer not found. Returning an empty source.');
+      return new VectorSource();
+    }
+
+    return importedLayer.getSource() as VectorSource;
   }
 
 }

@@ -16,7 +16,7 @@ export class ShpImportStrategy implements ImportStrategy {
 
     const prj = await this.extractPrj(file);
     if (prj) {
-      crs = ProjectionHelper.registerWktProjection(prj);
+      crs = ProjectionHelper.getEpsgCodeFromWkt(prj);
     }
 
     return { geojson, crs };

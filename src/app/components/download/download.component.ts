@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { GeoDataService } from '../../services/geo-data.service';
+import GeoJSON from 'ol/format/GeoJSON';
+import { DrawingService } from '../../services/drawing.service';
+import { MapViewerService } from '../../services/map-viewer.service';
 
 @Component({
   selector: 'app-download',
@@ -10,9 +13,10 @@ import { GeoDataService } from '../../services/geo-data.service';
   styleUrl: './download.component.scss',
 })
 export class DownloadComponent {
-  private _el = inject(ElementRef); 
+  private _el = inject(ElementRef);
   private _geoDataService = inject(GeoDataService);
-
+  private _drawService = inject(DrawingService);
+  private _mapService = inject(MapViewerService);
   showExportMenu = signal(false);
 
   @HostListener('document:click', ['$event'])
@@ -26,11 +30,13 @@ export class DownloadComponent {
     this.showExportMenu.update(v => !v);
   }
 
-   async export(format: string): Promise<void> {
+  async export(format: string): Promise<void> {
     try {
       this.showExportMenu.set(false);
       if (format === 'kml' || format === 'gpx' || format === 'zip' || format === 'geojson') {
-        const blob = await this._geoDataService.export(format);
+        const combinedGeojson = this.mergeSources();
+        // const blob = await this._geoDataService.export(format);
+        const blob = await this._geoDataService.exportAllData(format, combinedGeojson);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -42,6 +48,21 @@ export class DownloadComponent {
       console.error('Export error:', err);
       alert(err instanceof Error ? err.message : 'Export failed');
     }
+  }
+
+  mergeSources() {
+    const geojsonFormat = new GeoJSON();
+    const allFeatures = [
+      ...this._mapService.getImportedSource().getFeatures(),
+      ...this._drawService.source.getFeatures()
+    ];
+
+    const combinedGeojson = geojsonFormat.writeFeaturesObject(allFeatures, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      });
+
+    return combinedGeojson;
   }
 
 }
