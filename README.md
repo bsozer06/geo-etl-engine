@@ -3,6 +3,7 @@
 
 A web application for converting and visualizing GIS data.
 
+![alt text](public/data/webgis-burhan.png)
 ## Features
 - Import GIS files: KML, Shapefile (ZIP), GeoJSON, GPX, WKT
 - Export data as GeoJSON, KML, or Shapefile
@@ -13,7 +14,7 @@ A web application for converting and visualizing GIS data.
 ## Tech Stack
 - Angular 21 (Standalone Components, Signals)
 - Openlayers
-- GIS libraries: shpjs, @mapbox/togeojson
+- Other libraries: shpjs, @mapbox/togeojson
 - Tailwind CSS
 
 ## How It Works
