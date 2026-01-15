@@ -46,5 +46,18 @@ export class LayerPanelComponent {
     this.mapService.removeVectorLayer(layer);
    }
 
+
+   getActiveBasemapName(): string {
+  const active = this.basemaps().find(bm => bm.getVisible());
+  return active ? active.get('name').replace('Stadia Maps ', '') : 'Select';
+}
+
+handleImageError(layer: any) {
+  const defaultPath = 'assets/map-previews/osm.webp';
+  
+  if (layer.get('thumbnail') !== defaultPath) {
+    layer.set('thumbnail', defaultPath);
+  }
+}
 }
 

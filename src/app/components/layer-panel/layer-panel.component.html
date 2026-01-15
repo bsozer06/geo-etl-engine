@@ -1,35 +1,62 @@
-<div class="absolute top-4 right-4 z-20 w-72 flex flex-col bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-200/60 text-slate-700 overflow-hidden ring-1 ring-slate-900/5">
-  
+<div
+  class="absolute top-4 right-4 z-20 w-72 flex flex-col bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-200/60 text-slate-700 overflow-hidden ring-1 ring-slate-900/5">
+
   <div class="px-4 py-3 bg-slate-50/80 border-b border-slate-200/60 flex items-center justify-between">
     <div class="flex items-center gap-2.5">
       <div class="p-1.5 bg-indigo-600 rounded-lg shadow-sm shadow-indigo-200">
         <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
       </div>
       <span class="font-bold text-[11px] uppercase tracking-wider text-slate-800">Layer Panel</span>
     </div>
-    <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 tracking-tighter">V1.0</span>
+    <span
+      class="text-[9px] font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 tracking-tighter">V1.0</span>
   </div>
 
   <div class="overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar">
-    
-    <div class="p-3 border-b border-slate-100">
-      <h3 class="px-2 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-        <span class="w-1 h-1 rounded-full bg-slate-300"></span> Basemaps
-      </h3>
-      <div class="grid grid-cols-2 gap-1.5">
-        <button *ngFor="let bm of basemaps()" 
-                (click)="setBaseLayerVisibility(bm)"
-                [class.ring-2]="bm.getVisible()"
-                [class.ring-indigo-500]="bm.getVisible()"
-                [class.bg-indigo-50]="bm.getVisible()"
-                class="group relative flex flex-col items-start p-2 rounded-xl border border-slate-100 hover:border-indigo-200 transition-all duration-200 bg-white shadow-sm">
-          <span class="text-[10px] font-semibold text-slate-600 group-hover:text-indigo-600 truncate w-full uppercase tracking-tighter">
-            {{ bm.get('name').replace('Stadia Maps ', '') }}
-          </span>
-          <div *ngIf="bm.getVisible()" class="absolute top-1 right-1">
-            <span class="flex h-2 w-2 rounded-full bg-indigo-500"></span>
+
+    <div class="p-3 border-b border-slate-100 bg-slate-50/30">
+      <div class="px-2 mb-2 flex items-center justify-between">
+        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+          <span class="w-1 h-1 rounded-full bg-indigo-400"></span> Basemaps
+        </h3>
+        <span class="text-[9px] font-medium text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded">
+          {{ getActiveBasemapName() }}
+        </span>
+      </div>
+
+      <div class="flex gap-2 overflow-x-auto pb-2 px-1 custom-scrollbar-horizontal snap-x">
+        <button *ngFor="let bm of basemaps()" (click)="setBaseLayerVisibility(bm)"
+          class="relative flex-shrink-0 w-20 h-14 rounded-lg border-2 transition-all duration-300 snap-center overflow-hidden group"
+          [class.border-indigo-500]="bm.getVisible()" [class.border-slate-200]="!bm.getVisible()"
+          [class.ring-2]="bm.getVisible()" [class.ring-indigo-100]="bm.getVisible()">
+
+          <div class="absolute inset-0 bg-slate-200">
+  <img *ngIf="bm.get('thumbnail')"
+       [src]="bm.get('thumbnail')" 
+       [alt]="bm.get('name')"
+       (error)="handleImageError(bm)"
+       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+       
+  <div *ngIf="!bm.get('thumbnail')" 
+       class="w-full h-full flex items-center justify-center bg-slate-300">
+    <span class="text-[10px] font-bold text-slate-500">MAP</span>
+  </div>
+</div>
+
+          <div
+            class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur-sm py-0.5 px-1 text-center border-t border-slate-100">
+            <p class="text-[8px] font-bold text-slate-600 truncate uppercase tracking-tighter">
+              {{ bm.get('name').replace('Stadia Maps ', '') }}
+            </p>
+          </div>
+
+          <div *ngIf="bm.getVisible()" class="absolute top-1 right-1 bg-indigo-500 rounded-full p-0.5 shadow-sm">
+            <svg class="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
           </div>
         </button>
       </div>
@@ -39,41 +66,41 @@
       <h3 class="px-2 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
         <span class="w-1 h-1 rounded-full bg-slate-300"></span> Active Layers
       </h3>
-      
+
       <div class="space-y-1">
-        <div *ngFor="let layer of layers()" 
-             class="group flex items-center justify-between p-2 rounded-xl transition-all duration-200 hover:bg-slate-50 border border-transparent hover:border-slate-100 shadow-none hover:shadow-sm">
-          
+        <div *ngFor="let layer of layers()"
+          class="group flex items-center justify-between p-2 rounded-xl transition-all duration-200 hover:bg-slate-50 border border-transparent hover:border-slate-100 shadow-none hover:shadow-sm">
+
           <div class="flex items-center gap-3 min-w-0">
-            <button (click)="toggleLayerVisibility(layer)" 
-                    class="relative inline-flex h-4 w-7 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none"
-                    [class.bg-indigo-600]="layer.getVisible()"
-                    [class.bg-slate-200]="!layer.getVisible()">
-              <span class="pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                    [class.translate-x-3]="layer.getVisible()"
-                    [class.translate-x-0]="!layer.getVisible()">
+            <button (click)="toggleLayerVisibility(layer)"
+              class="relative inline-flex h-4 w-7 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none"
+              [class.bg-indigo-600]="layer.getVisible()" [class.bg-slate-200]="!layer.getVisible()">
+              <span
+                class="pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                [class.translate-x-3]="layer.getVisible()" [class.translate-x-0]="!layer.getVisible()">
               </span>
             </button>
 
             <span class="truncate text-[11px] font-medium text-slate-600 group-hover:text-slate-900 transition-colors"
-                  [class.opacity-50]="!layer.getVisible()">
+              [class.opacity-50]="!layer.getVisible()">
               {{ layer.get('name') }}
             </span>
           </div>
 
           <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
-            <button (click)="zoomToLayer(layer)" 
-                    class="p-1.5 rounded-lg hover:bg-indigo-100 text-slate-400 hover:text-indigo-600 transition-colors"
-                    title="Focus Extent">
+            <button (click)="zoomToLayer(layer)"
+              class="p-1.5 rounded-lg hover:bg-indigo-100 text-slate-400 hover:text-indigo-600 transition-colors"
+              title="Focus Extent">
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path d="M15 3h6m0 0v6m0-6L14 10M9 21H3m0 0v-6m0 6l7-7" />
               </svg>
             </button>
-            <!-- <button class="p-1.5 rounded-lg hover:bg-red-50 text-slate-300 hover:text-red-500 transition-colors">
+            <button class="p-1.5 rounded-lg hover:bg-red-50 text-slate-300 hover:text-red-500 transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <path
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-            </button> -->
+            </button>
           </div>
         </div>
       </div>

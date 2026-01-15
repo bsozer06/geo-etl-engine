@@ -168,7 +168,8 @@ export class MapViewerComponent {
       id: 'osm',
       name: 'OpenStreetMap',
       type: 'basemap',
-      removable: false
+      removable: false,
+      thumbnail: 'assets/map-previews/osm.webp'
     });
 
     const dark = new TileLayer({
@@ -183,7 +184,8 @@ export class MapViewerComponent {
       id: 'Stadia Maps Dark',
       name: 'Stadia Maps Dark',
       type: 'basemap',
-      removable: false
+      removable: false,
+      thumbnail: 'assets/map-previews/dark.webp'
     });
 
     return [osm, dark];
