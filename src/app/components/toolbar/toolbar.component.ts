@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { UploadComponent } from "../upload/upload.component";
 import { DownloadComponent } from "../download/download.component";
 import { DrawingToolsComponent } from "../drawing-tools/drawing-tools.component";
+import { MapPrintComponent } from "../map-print/map-print.component";
 
 @Component({
   selector: 'app-toolbar',
-  imports: [CommonModule, UploadComponent, DownloadComponent, DrawingToolsComponent],
+  imports: [CommonModule, UploadComponent, DownloadComponent, DrawingToolsComponent, MapPrintComponent],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })

@@ -15,8 +15,8 @@
   </div>
 
   <div *ngIf="showMenu()" 
-    class="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 flex flex-col overflow-hidden min-w-[170px] p-1.5 ring-1 ring-black/5 z-50"
-  >
+    class="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 flex flex-col overflow-hidden min-w-[180px] p-1.5 ring-1 ring-black/5 z-50">
+        <div class="px-3 py-1.5 mb-1 text-[9px] uppercase tracking-wider font-bold text-slate-400">Select Type</div>
     <button (click)="startDrawing('Point')" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-indigo-50 text-xs font-semibold text-slate-700 transition-all">
       <div class="flex items-center gap-3">
         <span class="flex items-center justify-center w-7 h-7 bg-indigo-100 rounded-lg shadow-sm">📍</span>
