@@ -1,0 +1,71 @@
+::ng-deep {
+    .ol-control.advanced-zoom {
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.7) !important;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 4px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        transition: transform 0.2s ease;
+        height: auto;
+        width: auto;
+    }
+
+    .ol-control.advanced-zoom:hover {
+        transform: translateY(-2px);
+    }
+
+    .ol-control.advanced-zoom button {
+        width: 24px !important;
+        height: 24px !important;
+        background-color: transparent !important;
+        color: #2c3e50 !important;
+        border: none;
+        border-radius: 8px !important;
+        font-size: 22px;
+        font-weight: 300;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .ol-control.advanced-zoom button.ol-zoom-in:hover {
+        background-color: rgba(52, 152, 219, 0.2) !important;
+        color: #3498db !important;
+    }
+
+    .ol-control.advanced-zoom button.ol-zoom-out:hover {
+        background-color: rgba(231, 76, 60, 0.2) !important;
+        color: #e74c3c !important;
+    }
+
+    .ol-control.advanced-zoom button:active {
+        transform: scale(0.9);
+    }
+
+    .zoom-level-indicator {
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: #34495e;
+        background: rgba(0, 0, 0, 0.06);
+        margin: 4px 0;
+        border-radius: 6px;
+        cursor: default;
+        user-select: none;
+        pointer-events: none;
+    }
+}

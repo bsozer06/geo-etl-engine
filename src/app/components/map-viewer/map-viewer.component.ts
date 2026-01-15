@@ -20,7 +20,8 @@ import StadiaMaps from 'ol/source/StadiaMaps';
 import { MousePositionComponent } from "../mouse-position/mouse-position.component";
 import { DrawingService } from '../../services/drawing.service';
 import { ToolbarComponent } from "../toolbar/toolbar.component";
-
+import { defaults as defaultControls } from 'ol/control';
+import { AdvancedZoomControl } from '../../utils/advanced-zoom-control';
 
 @Component({
   selector: 'app-map-viewer',
@@ -94,8 +95,9 @@ export class MapViewerComponent {
         center: [0, 0],
         zoom: 2,
         projection: MapViewerComponent.BASEMAP_CRS
-      })
-    });
+      }),
+      controls: defaultControls({ zoom: false }).extend([new AdvancedZoomControl()])}
+    );
     this._mapViewerService.setMap(this.map);
 
   }
