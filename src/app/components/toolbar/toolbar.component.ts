@@ -4,10 +4,11 @@ import { DrawingService } from '../../services/drawing.service';
 import { CommonModule } from '@angular/common';
 import { UploadComponent } from "../upload/upload.component";
 import { DownloadComponent } from "../download/download.component";
+import { DrawingToolsComponent } from "../drawing-tools/drawing-tools.component";
 
 @Component({
   selector: 'app-toolbar',
-  imports: [CommonModule, UploadComponent, DownloadComponent],
+  imports: [CommonModule, UploadComponent, DownloadComponent, DrawingToolsComponent],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })

@@ -1,0 +1,51 @@
+<div class="relative group">
+  <button 
+    (click)="toggleMenu()"
+    class="group/btn flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 active:scale-95 shadow-md"
+    [ngClass]="activeType() ? 'bg-indigo-600 text-white ring-4 ring-indigo-100' : 'bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white hover:scale-105'"
+  >
+    <svg class="w-5 h-5 group-hover/btn:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+    </svg>
+  </button>
+
+  <div class="absolute top-full mt-4 left-1/2 -translate-x-1/2 px-2.5 py-1.5 text-[10px] font-bold text-white bg-slate-800 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl z-50">
+    DRAWING TOOLS
+    <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+  </div>
+
+  <div *ngIf="showMenu()" 
+    class="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 flex flex-col overflow-hidden min-w-[170px] p-1.5 ring-1 ring-black/5 z-50"
+  >
+    <button (click)="startDrawing('Point')" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-indigo-50 text-xs font-semibold text-slate-700 transition-all">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-7 h-7 bg-indigo-100 rounded-lg shadow-sm">📍</span>
+        <span>Point</span>
+      </div>
+      <div *ngIf="activeType() === 'Point'" class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+    </button>
+    
+    <button (click)="startDrawing('LineString')" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-indigo-50 text-xs font-semibold text-slate-700 transition-all">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-7 h-7 bg-indigo-100 rounded-lg shadow-sm">📏</span>
+        <span>Line</span>
+      </div>
+      <div *ngIf="activeType() === 'LineString'" class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+    </button>
+
+    <button (click)="startDrawing('Polygon')" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-indigo-50 text-xs font-semibold text-slate-700 transition-all">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-7 h-7 bg-indigo-100 rounded-lg shadow-sm">⬠</span>
+        <span>Polygon</span>
+      </div>
+      <div *ngIf="activeType() === 'Polygon'" class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+    </button>
+
+    <div class="h-[1px] bg-slate-100 my-1"></div>
+
+    <button (click)="startDrawing(null)" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-xs font-semibold text-red-600 transition-all">
+      <span class="flex items-center justify-center w-7 h-7 bg-red-100 rounded-lg">✕</span>
+      <span>Stop Drawing</span>
+    </button>
+  </div>
+</div>
