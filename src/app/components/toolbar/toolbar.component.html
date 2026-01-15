@@ -1,0 +1,52 @@
+<div
+  class="absolute top-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 p-1.5 bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/40 ring-1 ring-black/5">
+
+
+  <div class="relative group">
+    <button (click)="toggleDrawMenu()"
+      class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 active:scale-95 shadow-md"
+      [ngClass]="activeDrawType() ? 'bg-purple-600 text-white ring-4 ring-purple-100' : 'bg-gradient-to-tr from-purple-600 to-purple-500 text-white hover:scale-105'">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+      </svg>
+    </button>
+
+    <div *ngIf="showDrawMenu()"
+      class="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden min-w-[150px] p-1.5 z-50">
+      <button (click)="startDrawing('Point')"
+        class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-purple-50 text-xs font-semibold text-gray-700 transition-all">
+        <div class="flex items-center gap-3"><span>📍</span> Point</div>
+        <div *ngIf="activeDrawType() === 'Point'" class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+      </button>
+
+      <button (click)="startDrawing('LineString')"
+        class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-purple-50 text-xs font-semibold text-gray-700 transition-all">
+        <div class="flex items-center gap-3"><span>📏</span> Line</div>
+        <div *ngIf="activeDrawType() === 'LineString'" class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+      </button>
+
+      <button (click)="startDrawing('Polygon')"
+        class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-purple-50 text-xs font-semibold text-gray-700 transition-all">
+        <div class="flex items-center gap-3"><span>⬠</span> Polygon</div>
+        <div *ngIf="activeDrawType() === 'Polygon'" class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+      </button>
+
+      <div class="h-[1px] bg-gray-100 my-1"></div>
+
+      <button (click)="startDrawing(null)"
+        class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-red-50 text-xs font-semibold text-red-600 transition-all">
+        <span>✕</span> Stop Drawing
+      </button>
+    </div>
+  </div>
+
+  <div class="w-[1px] h-6 bg-gray-300/50 mx-1"></div>
+
+  <app-upload></app-upload>
+
+  <div class="w-[1px] h-6 bg-gray-300/50 mx-1"></div>
+
+  <app-download></app-download>
+
+</div>

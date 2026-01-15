@@ -7,7 +7,6 @@ import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 import GeoJSON from 'ol/format/GeoJSON';
 import { GeoDataService } from '../../services/geo-data.service';
-import { UploadComponent } from "../upload/upload.component";
 import { Fill, Stroke, Style } from 'ol/style.js';
 import CircleStyle from 'ol/style/Circle';
 import { FeatureLike } from 'ol/Feature';
@@ -19,43 +18,46 @@ import { XYZ } from 'ol/source';
 import { LayerPanelComponent } from "../layer-panel/layer-panel.component";
 import StadiaMaps from 'ol/source/StadiaMaps';
 import { MousePositionComponent } from "../mouse-position/mouse-position.component";
+import { DrawingService } from '../../services/drawing.service';
+import { ToolbarComponent } from "../toolbar/toolbar.component";
 
 
 @Component({
   selector: 'app-map-viewer',
   standalone: true,
-  imports: [UploadComponent, CommonModule, LayerPanelComponent, MousePositionComponent],
+  imports: [CommonModule, LayerPanelComponent, MousePositionComponent, ToolbarComponent],
   templateUrl: './map-viewer.component.html',
   styleUrl: './map-viewer.component.scss',
 })
 export class MapViewerComponent {
   private _mapViewerService = inject(MapViewerService);
   private _geoDataService = inject(GeoDataService);
+  private _drawService = inject(DrawingService);
 
   @ViewChild('mapContainer', { static: true })
 
   mapContainer!: ElementRef<HTMLDivElement>;
   map!: Map;
-  vectorSource!: VectorSource;
+  importedDataVectorSource!: VectorSource;
   showExportMenu = false;
 
   public static readonly BASEMAP_CRS = 'EPSG:3857';
+  public static readonly FALLBACK_CRS = 'EPSG:4326';
 
   constructor() {
-
     effect(() => {
       const data = this._geoDataService.currentData();
       console.log('data signal:', data);
 
-      if (!data || !this.vectorSource) return;
+      if (!data || !this.importedDataVectorSource) return;
 
       const features = new GeoJSON().readFeatures(data.geojson, {
-        dataProjection: data.crs ?? 'EPSG:4326', // ⬅️ fallback
+        dataProjection: data.crs ?? MapViewerComponent.FALLBACK_CRS,
         featureProjection: MapViewerComponent.BASEMAP_CRS
       });
 
-      this.vectorSource.clear();
-      this.vectorSource.addFeatures(features);
+      this.importedDataVectorSource.clear();
+      this.importedDataVectorSource.addFeatures(features);
 
     });
 
@@ -65,35 +67,14 @@ export class MapViewerComponent {
     this._initializeMap();
   }
 
-  async export(format: string): Promise<void> {
-    try {
-      if (format === 'kml' || format === 'gpx' || format === 'zip' || format === 'geojson') {
-        const blob = await this._geoDataService.export(format);
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `export.${format}`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-    } catch (err) {
-      console.error('Export error:', err);
-      alert(err instanceof Error ? err.message : 'Export failed');
-    }
-  }
-
-  toggleExportMenu() {
-    this.showExportMenu = !this.showExportMenu;
-  }
-
   private _initializeMap(): void {
-    this.vectorSource = new VectorSource();
+    this.importedDataVectorSource = new VectorSource();
 
     this.map = new Map({
       target: this.mapContainer.nativeElement,
       layers: [
         ...this._createBasemaps(),
-        this._createVectorLayer(),
+        this._createImportedVectorLayer(),
         this._createDrawingVectorLayer()
       ],
       view: new View({
@@ -145,9 +126,9 @@ export class MapViewerComponent {
     })
   };
 
-  private _createVectorLayer(): VectorLayer {
+  private _createImportedVectorLayer(): VectorLayer {
     const layer = new VectorLayer({
-      source: this.vectorSource,
+      source: this.importedDataVectorSource,
       style: this._styleByGeometryType
     });
 
@@ -155,7 +136,7 @@ export class MapViewerComponent {
       id: 'imported',
       name: 'Imported Data',
       type: 'vector',
-      removable: true
+      removable: false
     });
 
     return layer;
@@ -163,7 +144,7 @@ export class MapViewerComponent {
 
   private _createDrawingVectorLayer(): VectorLayer {
     const layer = new VectorLayer({
-      source: this.vectorSource,
+      source: this._drawService.source,
       style: this._styleByGeometryType
     });
 
@@ -171,7 +152,7 @@ export class MapViewerComponent {
       id: 'drawing',
       name: 'Drawing Data',
       type: 'vector',
-      removable: true
+      removable: false
     });
 
     return layer;
