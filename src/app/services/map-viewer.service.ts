@@ -7,18 +7,32 @@ import TileSource from 'ol/source/Tile';
 import { Basemap } from '../models/basemap.model';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import Select from 'ol/interaction/Select';
+import { pointerMove } from 'ol/events/condition';
+import { Circle, Fill, Stroke, Style } from 'ol/style';
+import Feature, { FeatureLike } from 'ol/Feature';
+import { asyncScheduler, debounceTime, distinctUntilChanged, Subject, throttleTime } from 'rxjs';
+import MapBrowserEvent from 'ol/MapBrowserEvent';
+import { getUid } from 'ol/util';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapViewerService {
   private readonly _map = signal<Map | null>(null);
-  map = this._map.asReadonly();
+  private readonly _hoveredFeatureInfo = signal<any | null>(null);
   private readonly _vectorLayers = signal<BaseLayer[]>([]);
+  private hoverSubject = new Subject<MapBrowserEvent<any>>();
+  private _lastHoveredFeature: Feature | null = null;
+  private _highlightSource?: VectorSource;
+
+  map = this._map.asReadonly();
   vectorLayers = this._vectorLayers.asReadonly();
+  hoveredFeatureInfo = this._hoveredFeatureInfo.asReadonly();
 
   setMap(map: Map) {
     this._map.set(map);
+    this._initialHoverInteraction(map);
     this.refreshVectorLayers();
   }
 
@@ -79,7 +93,7 @@ export class MapViewerService {
 
     // Find the layer by the ID we assigned in MapViewerComponent
     const layers = currentMap.getLayers().getArray();
-    const importedLayer = layers.find(layer => 
+    const importedLayer = layers.find(layer =>
       layer.get('id') === 'imported'
     ) as VectorLayer<VectorSource>;
 
@@ -89,6 +103,67 @@ export class MapViewerService {
     }
 
     return importedLayer.getSource() as VectorSource;
+  }
+
+  private _initialHoverInteraction(map: Map) {
+    this._highlightSource = new VectorSource();
+    const _highlightLayer = new VectorLayer({
+      source: this._highlightSource,
+      style: this.HOVER_STYLE,
+      zIndex: 9999,
+    });
+    map.addLayer(_highlightLayer);
+
+    this.hoverSubject.pipe(
+      throttleTime(16, asyncScheduler, { leading: true, trailing: true }),
+      distinctUntilChanged((prev, curr) =>
+        prev.pixel[0] === curr.pixel[0] && prev.pixel[1] === curr.pixel[1]
+      ),
+    ).subscribe((event: any) => {
+      this._performHoverCheck(event, map);
+    });
+
+    map.on('pointermove', (e) => this.hoverSubject.next(e));
+  }
+
+
+  private readonly HOVER_STYLE = new Style({
+    stroke: new Stroke({ color: '#fbbf24', width: 5 }),
+    fill: new Fill({ color: 'rgba(251, 191, 36, 0.4)' }),
+    image: new Circle({
+      radius: 8,
+      fill: new Fill({ color: '#fbbf24' }),
+      stroke: new Stroke({ color: '#ffffff', width: 2 })
+    })
+  });
+
+  private _performHoverCheck(event: MapBrowserEvent<any>, map: Map) {
+    const feature = map.forEachFeatureAtPixel(event.pixel, (f) => f as Feature, {
+      layerFilter: (l) => l.get('type') === 'vector',
+      hitTolerance: 3
+    });
+
+    const currentUid = feature ? getUid(feature) : null;
+    const lastUid = this.hoveredFeatureInfo()?.ol_uid;
+
+    if (!this._highlightSource) return;
+
+    if (currentUid === lastUid) return;
+
+    this._highlightSource.clear(true);
+
+    if (feature && feature instanceof Feature) {
+      this._highlightSource.addFeature(feature);
+
+      const { geometry, ...properties } = feature.getProperties();
+      this._hoveredFeatureInfo.set({ ol_uid: currentUid, ...properties });
+
+      map.getTargetElement().style.cursor = 'pointer';
+    } else {
+      this._hoveredFeatureInfo.set(null);
+      map.getTargetElement().style.cursor = '';
+    }
+   
   }
 
 }
