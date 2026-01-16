@@ -7,6 +7,8 @@ A web application for converting and visualizing GIS data.
 ## Features
 - Import GIS files: KML, Shapefile (ZIP), GeoJSON, GPX, WKT
 - Export data as GeoJSON, KML, or Shapefile
+- Dynamic Context Menus
+- Layer Management
 - View data on an interactive map
 - Draw points, lines, polygons
 - Print the map as PDF or PNG
@@ -17,12 +19,6 @@ A web application for converting and visualizing GIS data.
 - Other libraries: shpjs, @mapbox/togeojson
 - Tailwind CSS
 
-## How It Works
-1. **Upload**: User uploads a GIS file
-2. **Convert**: Service layer detects format and converts to GeoJSON
-3. **State**: Data is stored in a signal
-4. **View**: Map updates automatically
-5. **Export**: Download current data as GeoJSON
 
 ## Getting Started
 1. Install dependencies:
