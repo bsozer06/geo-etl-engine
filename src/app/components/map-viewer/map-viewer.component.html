@@ -1,6 +1,6 @@
 <div class="relative w-full h-screen font-sans overflow-hidden bg-slate-900">
 
-  <div #mapContainer class="w-full h-full opacity-90"></div>
+  <div #mapContainer (contextmenu)="mapViewerService.handleRightClick($event)" class="w-full h-full opacity-90"></div>
 
   <app-toolbar></app-toolbar>
 
@@ -9,5 +9,5 @@
   </div>
 
   <app-mouse-position></app-mouse-position>
-
+  <app-map-context-menu></app-map-context-menu>
 </div>

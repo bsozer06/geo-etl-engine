@@ -19,11 +19,11 @@ import { getUid } from 'ol/util';
   providedIn: 'root',
 })
 export class MapViewerService {
+  rightClickedFeature = signal<any | null>(null);
   private readonly _map = signal<Map | null>(null);
   private readonly _hoveredFeatureInfo = signal<any | null>(null);
   private readonly _vectorLayers = signal<BaseLayer[]>([]);
   private hoverSubject = new Subject<MapBrowserEvent<any>>();
-  private _lastHoveredFeature: Feature | null = null;
   private _highlightSource?: VectorSource;
 
   map = this._map.asReadonly();
@@ -34,6 +34,29 @@ export class MapViewerService {
     this._map.set(map);
     this._initialHoverInteraction(map);
     this.refreshVectorLayers();
+  }
+
+  handleRightClick(event: MouseEvent) {
+    event.preventDefault();
+    const map = this.map();
+    if (!map) return;
+    const pixel = map.getEventPixel(event);
+    const feature = map.forEachFeatureAtPixel(pixel, (f) => f as Feature, {
+      layerFilter: (l) => l.get('type') === 'vector',
+      hitTolerance: 5
+    });
+
+    if (feature) {
+      const properties = feature.getProperties();
+      this.rightClickedFeature.set({
+        ol_uid: getUid(feature),
+        ...properties,
+        clientX: event.clientX, 
+        clientY: event.clientY
+      });
+    } else {
+      this.rightClickedFeature.set(null);
+    }
   }
 
   getLayersByType(type: 'basemap' | 'vector') {

@@ -1,0 +1,67 @@
+@if (mapService.rightClickedFeature(); as feature) {
+<div class="fixed z-[2000] bg-white shadow-xl rounded-lg py-2 min-w-[160px] border border-slate-200"
+  [style.left.px]="feature.clientX" [style.top.px]="feature.clientY">
+  <button (click)="openWindow(feature); $event.stopPropagation()"
+    class="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 flex items-center gap-2 transition-colors">
+    <span class="text-slate-500">🔍</span> View Details
+  </button>
+</div>
+}
+
+@if (isWindowOpen()) {
+<div cdkDrag
+  class="fixed z-[1001] w-[350px] bg-white rounded-xl shadow-2xl border border-slate-300 flex flex-col pointer-events-auto overflow-hidden"
+  style="left: 60px; top: 100px;">
+
+  <div cdkDragHandle
+    class="flex items-center justify-between bg-slate-900 px-4 py-2.5 cursor-move active:cursor-grabbing select-none">
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+      <h3 class="text-white text-[11px] font-bold uppercase tracking-widest">Feature Attributes</h3>
+    </div>
+    <button (click)="closeWindow()" class="text-slate-400 hover:text-white p-1 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="max-h-[350px] overflow-y-auto">
+    <table class="w-full text-[12px] text-left">
+      <tbody class="divide-y divide-slate-100">
+        @for (item of filteredData(); track item.key) {
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td
+            class="px-4 py-2.5 font-bold text-slate-500 bg-slate-50/50 w-[120px] border-r border-slate-100 uppercase text-[10px]">
+            {{ item.key }}
+          </td>
+          <td class="px-4 py-2.5 text-slate-700 font-medium selection:bg-indigo-100">
+            {{ item.value }}
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="2" class="px-4 py-8 text-center text-slate-400 italic">
+            No data available to display.
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+    <button (click)="closeWindow()"
+      class="text-[10px] bg-indigo-600 text-white px-4 py-1.5 rounded shadow-sm font-bold uppercase hover:bg-indigo-700 transition-all active:scale-95">
+      Close
+    </button>
+    <!-- <button
+      class="text-[10px] bg-indigo-600 text-white px-4 py-1.5 rounded shadow-sm font-bold uppercase hover:bg-indigo-700 transition-all active:scale-95">
+      Zoom to Feature
+    </button> -->
+    <div class="flex flex-col items-end">
+      <span class="text-[9px] text-slate-400 font-mono">UID: {{ selectedFeatureData()?.ol_uid }}</span>
+    </div>
+  </div>
+</div>
+}

@@ -22,16 +22,17 @@ import { DrawingService } from '../../services/drawing.service';
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { defaults as defaultControls } from 'ol/control';
 import { AdvancedZoomControl } from '../../utils/advanced-zoom-control';
+import { MapContextMenuComponent } from "../map-context-menu/map-context-menu.component";
 
 @Component({
   selector: 'app-map-viewer',
   standalone: true,
-  imports: [CommonModule, LayerPanelComponent, MousePositionComponent, ToolbarComponent],
+  imports: [CommonModule, LayerPanelComponent, MousePositionComponent, ToolbarComponent, MapContextMenuComponent],
   templateUrl: './map-viewer.component.html',
   styleUrl: './map-viewer.component.scss',
 })
 export class MapViewerComponent {
-  private _mapViewerService = inject(MapViewerService);
+  public mapViewerService = inject(MapViewerService);
   private _geoDataService = inject(GeoDataService);
   private _drawService = inject(DrawingService);
 
@@ -98,7 +99,7 @@ export class MapViewerComponent {
       }),
       controls: defaultControls({ zoom: false }).extend([new AdvancedZoomControl()])}
     );
-    this._mapViewerService.setMap(this.map);
+    this.mapViewerService.setMap(this.map);
 
   }
 
