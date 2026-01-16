@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:gh": "ng build --configuration production --base-href /geo-etl-engine/",
-    "deploy:gh": "gh-pages -d dist/geo-etl-engine/browser"
+    "deploy:gh": "npx gh-pages -d dist/geo-etl-engine/browser"
   },
   "prettier": {
     "printWidth": 100,
