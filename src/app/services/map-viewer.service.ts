@@ -52,7 +52,8 @@ export class MapViewerService {
         ol_uid: getUid(feature),
         ...properties,
         clientX: event.clientX, 
-        clientY: event.clientY
+        clientY: event.clientY,
+        feature: feature
       });
     } else {
       this.rightClickedFeature.set(null);
@@ -126,6 +127,21 @@ export class MapViewerService {
     }
 
     return importedLayer.getSource() as VectorSource;
+  }
+
+  getVectorSource(): VectorSource {
+    const map = this.map();
+    if (!map) throw new Error('Map not initialized');
+
+    const layers = map.getLayers().getArray();
+    const targetLayer = layers.find(l => l.get('id') === 'drawing') as VectorLayer<VectorSource>;
+
+    if (targetLayer) {
+      return targetLayer.getSource()!;
+    }
+
+    const fallbackLayer = layers.find(l => l.get('type') === 'vector') as VectorLayer<VectorSource>;
+    return fallbackLayer ? fallbackLayer.getSource()! : new VectorSource();
   }
 
   private _initialHoverInteraction(map: Map) {
