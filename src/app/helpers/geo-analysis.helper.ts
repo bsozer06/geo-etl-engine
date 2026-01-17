@@ -37,10 +37,18 @@ export class GeoAnalysisHelper {
         }
     }
 
-    static getCentroid(olFeature: Feature): Feature {
-        const geojson = this.format.writeFeatureObject(olFeature);
+    static getCentroid(olFeature: any): Feature {
+        const geojson = this.format.writeFeatureObject(olFeature, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
+
         const centroid = turf.centroid(geojson);
-        return this.format.readFeature(centroid) as Feature;
+
+        return this.format.readFeature(centroid, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        }) as Feature;
     }
 
 }
