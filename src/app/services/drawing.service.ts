@@ -1,28 +1,38 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, NgZone, signal } from '@angular/core';
 import VectorSource from 'ol/source/Vector';
-import Draw from 'ol/interaction/Draw';
+import Draw, { DrawEvent } from 'ol/interaction/Draw';
 import Map from 'ol/Map';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DrawingService {
-  
+
   private readonly _drawSource = new VectorSource();
   private _activeDrawInteraction: Draw | null = null;
   activeType = signal<'Point' | 'LineString' | 'Polygon' | null>(null);
+  private zone = inject(NgZone);
 
   get source() {
     return this._drawSource;
   }
 
-  startDrawing(map: Map, type: 'Point' | 'LineString' | 'Polygon') {
+  startDrawing(map: Map, type: 'Point' | 'LineString' | 'Polygon', callback?: (feature: any) => void) {
     this.stopDrawing(map); // clean up any existing interaction
 
     this._activeDrawInteraction = new Draw({
       source: this._drawSource,
       type: type
     });
+
+    if (callback) {
+      this._activeDrawInteraction.on('drawend', (event: DrawEvent) => {
+        this.zone.run(() => {
+          callback(event.feature);
+          this.stopDrawing(map);
+        });
+      });
+    }
 
     map.addInteraction(this._activeDrawInteraction);
     this.activeType.set(type);
