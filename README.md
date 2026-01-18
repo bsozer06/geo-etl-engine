@@ -5,13 +5,18 @@ A web application for converting and visualizing GIS data.
 
 ![alt text](public/data/webgis-burhan.png)
 ## Features
-- Import GIS files: KML, Shapefile (ZIP), GeoJSON, GPX, WKT
-- Export data as GeoJSON, KML, or Shapefile
-- Dynamic Context Menus
-- Layer Management
-- View data on an interactive map
-- Draw points, lines, polygons
-- Print the map as PDF or PNG
+- **Satellite Imagery & STAC Integration**: 
+  - Search and discover Sentinel-2 satellite data via STAC API
+  - Integrated Cloud Optimized GeoTIFF (COG) rendering using `ol-stac`
+  - Automated area-of-interest (AOI) search via interactive drawing
+  - Cloud cover filtering and metadata visualization
+- **Import GIS files**: KML, Shapefile (ZIP), GeoJSON, GPX, WKT
+- **Export data**: GeoJSON, KML, or Shapefile
+- **Dynamic Context Menus**: Right-click interactions for layer and feature management
+- **Layer Management**: Toggle visibility, remove, and organize map layers
+- **Interactive Mapping**: High-performance data visualization with OpenLayers
+- **Drawing Tools**: Create points, lines, polygons, and circles
+- **Map Print**: Export high-resolution map views as PDF or PNG
 
 ## Tech Stack
 - Angular 21 (Standalone Components, Signals)
