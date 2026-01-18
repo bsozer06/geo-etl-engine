@@ -12,7 +12,11 @@ A web application for converting and visualizing GIS data.
   - Cloud cover filtering and metadata visualization
 - **Import GIS files**: KML, Shapefile (ZIP), GeoJSON, GPX, WKT
 - **Export data**: GeoJSON, KML, or Shapefile
-- **Dynamic Context Menus**: Right-click interactions for layer and feature management
+- **Advanced Dynamic Context Menus**: 
+  - **View Feature Attributes** Right-click interactions for layer and feature management
+  - **WKT Integration**: Copy feature geometry as WKT or import from string
+  - **Buffer Analysis**: Perform spatial buffer operations on selected features
+  - **Measurement Tools**: Real-time distance and area measurements via context actions
 - **Layer Management**: Toggle visibility, remove, and organize map layers
 - **Interactive Mapping**: High-performance data visualization with OpenLayers
 - **Drawing Tools**: Create points, lines, polygons, and circles
