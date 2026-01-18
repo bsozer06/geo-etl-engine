@@ -2,10 +2,12 @@ import { Component, inject, ElementRef } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { StacPanelComponent } from '../stac-panel/stac-panel.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-stac-toolbar',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './stac-toolbar.component.html',
   styleUrl: './stac-toolbar.component.scss',
 })
