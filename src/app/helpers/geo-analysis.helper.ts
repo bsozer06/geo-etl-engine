@@ -80,4 +80,23 @@ export class GeoAnalysisHelper {
         });
     }
 
+    // static async searchSTAC(geometry: any, dateRange: string) {
+    //     const bbox = turf.bbox(geometry); // [minX, minY, maxX, maxY]
+
+    //     const searchParams = {
+    //         bbox: bbox,
+    //         datetime: dateRange, // "2023-01-01T00:00:00Z/2023-12-31T23:59:59Z"
+    //         collections: ["sentinel-2-l2a"],
+    //         limit: 10
+    //     };
+
+    //     const response = await fetch("https://earth-search.aws.element84.com/v1/search", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify(searchParams)
+    //     });
+
+    //     return await response.json();
+    // }
+
 }
