@@ -1,5 +1,5 @@
 import * as turf from '@turf/turf';
-import { GeoJSON } from 'ol/format';
+import { GeoJSON, WKT } from 'ol/format';
 import { Feature } from 'ol';
 
 export class GeoAnalysisHelper {
@@ -60,7 +60,7 @@ export class GeoAnalysisHelper {
             featureProjection: 'EPSG:3857'
         });
 
-        
+
         const lineData = geojson as any;
         const lineLength = turf.length(lineData);
 
@@ -70,6 +70,14 @@ export class GeoAnalysisHelper {
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:3857'
         }) as Feature;
+    }
+
+    static convertToWKT(olFeature: any): string {
+        const wktFormat = new WKT();
+        return wktFormat.writeFeature(olFeature, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
     }
 
 }

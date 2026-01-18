@@ -22,6 +22,10 @@ export class MapContextMenuComponent {
   selectedFeatureData = signal<any>(null);
   isWindowOpen = signal(false);
 
+  showWktModal = signal(false);
+  currentWkt = signal('');
+  copySuccess = signal(false);
+
   private _el = inject(ElementRef);
   private bufferStyle = new Style({
     stroke: new Stroke({ color: '#4f46e5', width: 2 }),
@@ -167,6 +171,19 @@ export class MapContextMenuComponent {
     if (!data?.feature) return false;
     const type = data.feature.getGeometry()?.getType();
     return type === 'LineString' || type === 'MultiLineString';
+  }
+
+  onCopyWKTClick(data: any) {
+    const wkt = GeoAnalysisHelper.convertToWKT(data.feature);
+    this.currentWkt.set(wkt);
+    this.showWktModal.set(true); // Pencereyi aç
+    this.mapService.rightClickedFeature.set(null); // Context menüyü kapat
+  }
+
+  async copyFromModal() {
+    await navigator.clipboard.writeText(this.currentWkt());
+    this.copySuccess.set(true);
+    setTimeout(() => this.copySuccess.set(false), 2000);
   }
 
 
