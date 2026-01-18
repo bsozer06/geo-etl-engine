@@ -17,6 +17,22 @@
     </svg>
     Buffer Analysis
   </button>
+  <button (click)="onCentroidClick(feature); $event.stopPropagation()" *ngIf="isPolygon(feature)"
+    class="w-full px-3 py-1.5 text-left text-[13px] text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-2.5">
+    <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" fill="currentColor" />
+      <path d="M12 2v4m0 12v4M2 12h4m12 0h4" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    Find Centroid
+  </button>
+  <button *ngIf="isPolygon(feature) || isLine(feature)"
+  (click)="onMeasureClick(feature); $event.stopPropagation()"
+  class="w-full px-3 py-1.5 text-left text-[13px] text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-2.5">
+  <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path d="M9 7v10m4-10v10M9 7h4m-4 10h4m3-14L5 19" stroke-width="2"/>
+  </svg>
+  {{ isPolygon(feature) ? 'Calculate Area' : 'Calculate Length' }}
+</button>
 </div>
 }
 

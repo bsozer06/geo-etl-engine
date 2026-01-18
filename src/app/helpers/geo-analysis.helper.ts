@@ -17,23 +17,26 @@ export class GeoAnalysisHelper {
         }) as Feature;
     }
 
-    static calculateMeasurement(olFeature: Feature): { value: number; unit: string; type: string } {
-        const geojson = this.format.writeFeatureObject(olFeature);
-        const geometryType = olFeature.getGeometry()?.getType();
+    static calculateMeasurement(olFeature: any): { value: string, label: string } {
+        const geojson = this.format.writeFeatureObject(olFeature, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
 
-        if (geometryType?.includes('Polygon')) {
-            return {
-                value: turf.area(geojson),
-                unit: 'm²',
-                type: 'Area'
-            };
+        const type = olFeature.getGeometry()?.getType();
+
+        if (type.includes('Polygon')) {
+            const area = turf.area(geojson); // m²
+            const formattedArea = area > 10000
+                ? (area / 10000).toFixed(2) + ' ha'
+                : area.toFixed(2) + ' m²';
+            return { value: formattedArea, label: 'Area' };
         } else {
             const length = turf.length(geojson, { units: 'kilometers' });
-            return {
-                value: length,
-                unit: 'km',
-                type: 'Length'
-            };
+            const formattedLength = length < 1
+                ? (length * 1000).toFixed(2) + ' m'
+                : length.toFixed(2) + ' km';
+            return { value: formattedLength, label: 'Length' };
         }
     }
 
@@ -46,6 +49,24 @@ export class GeoAnalysisHelper {
         const centroid = turf.centroid(geojson);
 
         return this.format.readFeature(centroid, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        }) as Feature;
+    }
+
+    static getLineMiddlePoint(olFeature: any): Feature {
+        const geojson = this.format.writeFeatureObject(olFeature, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
+
+        
+        const lineData = geojson as any;
+        const lineLength = turf.length(lineData);
+
+        const middlePoint = turf.along(lineData, lineLength / 2);
+
+        return this.format.readFeature(middlePoint, {
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:3857'
         }) as Feature;
