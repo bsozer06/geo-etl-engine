@@ -7,6 +7,7 @@ import TileLayer from 'ol/layer/Tile';
 import { GeoTIFF } from 'ol/source';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import STAC, { Extent } from 'ol-stac';
 
 @Component({
   selector: 'app-stac-panel',
@@ -41,8 +42,8 @@ export class StacPanelComponent {
             // this.results.set(data.features);
             console.log('Veri geldi:', data.features.length);
             this.results.set([...data.features]);
-            this.cdr.markForCheck(); 
-            this.cdr.detectChanges(); 
+            this.cdr.markForCheck();
+            this.cdr.detectChanges();
           }
         } catch (err: any) {
           console.error(err);
@@ -60,22 +61,35 @@ export class StacPanelComponent {
     const map = this.mapService.map();
     if (!map) return;
 
-    // Önceki STAC katmanlarını temizle (Sadece 1 görüntü kalsın)
-    map.getLayers().getArray()
-      .filter(layer => layer.get('name') === 'stac-layer')
-      .forEach(layer => map.removeLayer(layer));
+    const allLayers = map.getLayers().getArray();
+    for (let i = allLayers.length - 1; i >= 0; i--) {
+      const layer = allLayers[i];
+      if (layer.get('name') === 'stac') {
+        if ((layer as any).getSource()?.clear) {
+          (layer as any).getSource().clear();
+        }
+        map.removeLayer(layer);
+      }
+    }
 
-    const cogUrl = item.assets.visual.href;
 
-    const satelliteLayer = new TileLayer({
-      source: new GeoTIFF({
-        sources: [{ url: cogUrl }]
-      }),
-      properties: { name: 'stac-layer' } // Kimlik verdik
+    const stacLayer = new STAC({
+      data: item
     });
 
-    map.addLayer(satelliteLayer);
-    map.getView().fit(item.bbox, { duration: 1000, padding: [40, 40, 40, 40] });
+    stacLayer.set('name', 'stac');
+
+    map.addLayer(stacLayer);
+
+    stacLayer.on('addlayer', () => {
+      const extent = stacLayer.getExtent();
+      if (extent) {
+        map.getView().fit(extent as Extent, {
+          duration: 1000,
+          padding: [50, 50, 50, 50]
+        });
+      }
+    });
   }
 
 

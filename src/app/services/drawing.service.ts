@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, NgZone, signal } from '@angular/core';
 import VectorSource from 'ol/source/Vector';
 import Draw, { DrawEvent } from 'ol/interaction/Draw';
 import Map from 'ol/Map';
@@ -7,10 +7,11 @@ import Map from 'ol/Map';
   providedIn: 'root',
 })
 export class DrawingService {
-  
+
   private readonly _drawSource = new VectorSource();
   private _activeDrawInteraction: Draw | null = null;
   activeType = signal<'Point' | 'LineString' | 'Polygon' | null>(null);
+  private zone = inject(NgZone);
 
   get source() {
     return this._drawSource;
@@ -26,8 +27,10 @@ export class DrawingService {
 
     if (callback) {
       this._activeDrawInteraction.on('drawend', (event: DrawEvent) => {
-        callback(event.feature);
-        this.stopDrawing(map);
+        this.zone.run(() => {
+          callback(event.feature);
+          this.stopDrawing(map);
+        });
       });
     }
 

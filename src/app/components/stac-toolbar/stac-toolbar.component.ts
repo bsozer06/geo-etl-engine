@@ -33,14 +33,14 @@ private overlay = inject(Overlay);
 
     this.overlayRef = this.overlay.create({
       positionStrategy,
-      hasBackdrop: true,
+      hasBackdrop: false,
       backdropClass: 'cdk-overlay-transparent-backdrop'
     });
 
     this.overlayRef.attach(new ComponentPortal(StacPanelComponent));
-    this.overlayRef.backdropClick().subscribe(() => {
-      this.overlayRef?.detach();
-      this.isOpen = false;
-    });
+    // this.overlayRef.backdropClick().subscribe(() => {
+    //   this.overlayRef?.detach();
+    //   this.isOpen = false;
+    // });
   }
 }

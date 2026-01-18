@@ -16,13 +16,13 @@ export class StacService {
       featureProjection: 'EPSG:3857'
     });
 
-    // Area Limit
-    const area = turf.area(geojson as any);
-    const areaKm2 = area / 1_000_000;
+    // // Area Limit
+    // const area = turf.area(geojson as any);
+    // const areaKm2 = area / 1_000_000;
     
-    if (areaKm2 > 250) {
-      throw new Error(`Area too large (${areaKm2.toFixed(2)} km²). Max 250 km² allowed.`);
-    }
+    // if (areaKm2 > 250) {
+    //   throw new Error(`Area too large (${areaKm2.toFixed(2)} km²). Max 250 km² allowed.`);
+    // }
 
     // 2. STAC Search
     const response = await fetch(this.STAC_API_URL, {
