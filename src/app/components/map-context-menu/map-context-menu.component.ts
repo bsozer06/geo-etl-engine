@@ -187,4 +187,24 @@ export class MapContextMenuComponent {
   }
 
 
+  hasStacLayer(): boolean {
+    const map = this.mapService.map();
+    return !!map?.getLayers().getArray().find(l => l.get('type') === 'stac');
+  }
+
+  isStacInNDVI(): boolean {
+    const map = this.mapService.map();
+    const stacLayer = map?.getLayers().getArray().find(l => l.get('type') === 'stac');
+    return stacLayer?.get('isNDVI') || false;
+  }
+
+  onNDVI() {
+    this.mapService.applyNDVI();
+    // this.close();
+  }
+
+  onResetSTAC() {
+    this.mapService.resetStacStyle();
+    // this.close();
+  }
 }

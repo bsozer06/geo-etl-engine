@@ -1,6 +1,7 @@
 @if (mapService.rightClickedFeature(); as feature) {
 <div class="fixed z-[2000] bg-white shadow-xl rounded-lg py-2 min-w-[160px] border border-slate-200"
   [style.left.px]="feature.clientX" [style.top.px]="feature.clientY">
+  @if (feature.feature) {
   <button (click)="openWindow(feature); $event.stopPropagation()"
     class="w-full px-3 py-1.5 text-left text-[13px] text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-2.5">
     <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,6 +41,31 @@
       <path d="M9 7v10m4-10v10M9 7h4m-4 10h4m3-14L5 19" stroke-width="2" />
     </svg>
     {{ isPolygon(feature) ? 'Calculate Area' : 'Calculate Length' }}
+  </button>
+  }
+
+  <hr class="my-1 border-slate-100" *ngIf="hasStacLayer()">
+
+  <button *ngIf="hasStacLayer() && !isStacInNDVI()" (click)="onNDVI()"
+    class="flex items-center gap-2 px-3 py-2 w-full hover:bg-emerald-50 text-emerald-700 text-xs font-medium transition-colors">
+    <div class="p-1 bg-emerald-100 rounded-md">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M12 3v18m9-9H3" stroke-width="2.5" stroke-linecap="round" />
+      </svg>
+    </div>
+    Analyze Vegetation (NDVI)
+  </button>
+
+  <button *ngIf="hasStacLayer() && isStacInNDVI()" (click)="onResetSTAC()"
+    class="flex items-center gap-2 px-3 py-2 w-full hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors">
+    <div class="p-1 bg-slate-200 rounded-md">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          stroke-width="2.5" stroke-linecap="round" />
+      </svg>
+    </div>
+    Reset View (True Color)
   </button>
 </div>
 }
@@ -99,6 +125,7 @@
       <span class="text-[9px] text-slate-400 font-mono">UID: {{ selectedFeatureData()?.ol_uid }}</span>
     </div>
   </div>
+
 </div>
 }
 
@@ -107,7 +134,7 @@
   class="fixed z-[1001] w-[350px] bg-white rounded-xl shadow-2xl border border-slate-300 flex flex-col pointer-events-auto overflow-hidden"
   style="left: 45%; top: 45%;">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[80vh]">
-    
+
     <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
       <h3 class="font-semibold text-slate-800 flex items-center gap-2">
         <span class="text-indigo-600">📄</span> WKT Geometry Data
@@ -122,11 +149,11 @@
     </div>
 
     <div class="px-6 py-4 border-t border-slate-100 flex justify-end gap-3 bg-white">
-      <button (click)="showWktModal.set(false)" 
+      <button (click)="showWktModal.set(false)"
         class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
         Close
       </button>
-      <button (click)="copyFromModal()" 
+      <button (click)="copyFromModal()"
         class="px-4 py-2 text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg shadow-sm transition-all flex items-center gap-2">
         <span>{{ copySuccess() ? 'Done!' : 'Copy to Clipboard' }}</span>
       </button>

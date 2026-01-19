@@ -54,18 +54,27 @@ export class MapViewerService {
       hitTolerance: 5
     });
 
-    if (feature) {
-      const properties = feature.getProperties();
+    // if (feature) {
+    //   const properties = feature.getProperties();
+      // this.rightClickedFeature.set({
+      //   ol_uid: getUid(feature),
+      //   ...properties,
+      //   clientX: event.clientX,
+      //   clientY: event.clientY,
+      //   feature: feature
+      // });
       this.rightClickedFeature.set({
-        ol_uid: getUid(feature),
-        ...properties,
+        ol_uid: feature ? getUid(feature) : null,
+        ...(feature ? feature.getProperties() : {}),
         clientX: event.clientX,
         clientY: event.clientY,
-        feature: feature
+        pixel: pixel,
+        feature: feature || null, // null ise boşluğa tıklandı demektir
+        isMapClick: !feature // Vektör feature yoksa bu bir harita tıklamasıdır
       });
-    } else {
-      this.rightClickedFeature.set(null);
-    }
+    // } else {
+    //   this.rightClickedFeature.set(null);
+    // }
   }
 
   getLayersByType(type: 'basemap' | 'vector') {
@@ -180,6 +189,72 @@ export class MapViewerService {
     const fallbackLayer = layers.find(l => l.get('type') === 'vector') as VectorLayer<VectorSource>;
     return fallbackLayer ? fallbackLayer.getSource()! : new VectorSource();
   }
+
+  applyNDVI() {
+  const map = this.map();
+  if (!map) return;
+
+  // Haritadaki tüm katmanları kontrol et ve tipi 'stac' olanı bul
+  const stacLayer = map.getLayers().getArray().find(l => l.get('type') === 'stac') as any;
+
+  if (stacLayer) {
+    const ndviStyle = {
+      color: [
+        'interpolate',
+        ['linear'],
+        ['/', 
+          ['-', ['band', 8], ['band', 4]], 
+          ['+', ['band', 8], ['band', 4]]
+        ],
+        -0.1, [255, 0, 0],    // Su / Yerleşim (Kırmızı)
+        0.1, [255, 255, 0],   // Açık toprak (Sarı)
+        0.3, [144, 238, 144], // Az bitki (Açık Yeşil)
+        0.6, [34, 139, 34],   // Sağlıklı (Yeşil)
+        0.9, [0, 100, 0]      // Yoğun orman (Koyu Yeşil)
+      ]
+    };
+
+    // ol-stac katmanları genellikle bir gruptur. 
+    // Eğer doğrudan setStyle yoksa içindeki asıl render layer'ına ulaşırız:
+    if (stacLayer.getLayers) {
+       const subLayer = stacLayer.getLayers().getArray()[1];
+       if (subLayer) subLayer.set('style', ndviStyle);
+    } else {
+       // Eğer doğrudan layer ise:
+       stacLayer.set('style', ndviStyle);
+    }
+    
+    stacLayer.set('isNDVI', true);
+  }
+}
+
+  resetStacStyle() {
+  const map = this.map();
+  if (!map) return;
+
+  const stacLayer = map.getLayers().getArray().find(l => l.get('type') === 'stac') as any;
+
+  if (stacLayer) {
+    const trueColorStyle = {
+      color: [
+        'array',
+        ['band', 4], // Red
+        ['band', 3], // Green
+        ['band', 2], // Blue
+        1            // Opacity
+      ]
+    };
+
+    if (stacLayer.getLayers) {
+       const subLayer = stacLayer.getLayers().getArray()[1];
+       if (subLayer) subLayer.set('style', trueColorStyle);
+    } else {
+       stacLayer.set('style', trueColorStyle);
+    }
+    
+    stacLayer.set('isNDVI', false);
+  }
+}
 
   private _initialHoverInteraction(map: Map) {
     this._highlightSource = new VectorSource();
