@@ -22,14 +22,14 @@
         <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
           <span class="w-1 h-1 rounded-full bg-indigo-400"></span> Basemaps
         </h3>
-        <span class="text-[9px] font-medium text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded">
+        <span class="text-[8px] font-medium text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded">
           {{ getActiveBasemapName() }}
         </span>
       </div>
 
       <div class="flex gap-2 overflow-x-auto pb-2 px-1 custom-scrollbar-horizontal snap-x">
         <button *ngFor="let bm of basemaps()" (click)="setBaseLayerVisibility(bm)"
-          class="relative flex-shrink-0 w-20 h-14 rounded-lg border-2 transition-all duration-300 snap-center overflow-hidden group"
+          class="relative flex-shrink-0 w-18 h-14 rounded-lg border-2 transition-all duration-300 snap-center overflow-hidden group"
           [class.border-indigo-500]="bm.getVisible()" [class.border-slate-200]="!bm.getVisible()"
           [class.ring-2]="bm.getVisible()" [class.ring-indigo-100]="bm.getVisible()">
 

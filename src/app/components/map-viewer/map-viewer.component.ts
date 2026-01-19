@@ -236,7 +236,23 @@ export class MapViewerComponent {
       thumbnail: 'assets/map-previews/dark.webp'
     });
 
-    return [osm, dark];
+    const satellite = new TileLayer({
+    source: new XYZ({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      maxZoom: 19
+    }),
+    visible: false
+  });
+
+  satellite.setProperties({
+    id: 'satellite',
+    name: 'Satellite Imagery',
+    type: 'basemap',
+    removable: false,
+    thumbnail: 'assets/map-previews/esri.webp'
+  });
+
+    return [osm, dark, satellite];
   }
 
 }
