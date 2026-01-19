@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -23,6 +23,7 @@ import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { defaults as defaultControls } from 'ol/control';
 import { AdvancedZoomControl } from '../../utils/advanced-zoom-control';
 import { MapContextMenuComponent } from "../map-context-menu/map-context-menu.component";
+import STAC from 'ol-stac';
 
 @Component({
   selector: 'app-map-viewer',
@@ -52,10 +53,10 @@ export class MapViewerComponent {
       console.log('data signal:', data);
 
       if (!data || !this.importedDataVectorSource) return;
-      
+
       const geojsonFormat = new GeoJSON();
       let allFeatures: any[] = [];
-      
+
       if (Array.isArray(data.geojson)) {
         data.geojson.forEach(collection => {
           const features = geojsonFormat.readFeatures(collection, {
@@ -76,6 +77,36 @@ export class MapViewerComponent {
 
     });
 
+    effect(() => {
+      const stacItem = this.mapViewerService.selectedStacItem();
+      if (!stacItem || !this.map) return;
+
+      console.log('STAC Katmanı yükleniyor:', stacItem.id);
+
+      this.map.getLayers().getArray()
+        .filter(l => l.get('type') === 'stac')
+        .forEach(l => this.map.removeLayer(l));
+
+      const stacLayer = new STAC({
+        data: stacItem,
+      });
+
+      stacLayer.setProperties({
+        name: `Satellite: ${new Date(stacItem.properties.datetime).toLocaleDateString()}`,
+        type: 'stac',
+        id: 'stac-' + stacItem.id
+      });
+
+      this.map.addLayer(stacLayer);
+
+      stacLayer.on('addlayer', () => {
+        const extent = stacLayer.getExtent();
+        if (extent) {
+          this.map.getView().fit(extent, { duration: 1000, padding: [40, 40, 40, 40] });
+        }
+        this.mapViewerService.refreshLayers();
+      });
+    });
   }
 
   ngAfterViewInit(): void {
@@ -97,7 +128,8 @@ export class MapViewerComponent {
         zoom: 2,
         projection: MapViewerComponent.BASEMAP_CRS
       }),
-      controls: defaultControls({ zoom: false }).extend([new AdvancedZoomControl()])}
+      controls: defaultControls({ zoom: false }).extend([new AdvancedZoomControl()])
+    }
     );
     this.mapViewerService.setMap(this.map);
 

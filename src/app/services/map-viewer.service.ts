@@ -23,17 +23,25 @@ export class MapViewerService {
   private readonly _map = signal<Map | null>(null);
   private readonly _hoveredFeatureInfo = signal<any | null>(null);
   private readonly _vectorLayers = signal<BaseLayer[]>([]);
+  private readonly _layers = signal<any[]>([]);
+
   private hoverSubject = new Subject<MapBrowserEvent<any>>();
   private _highlightSource?: VectorSource;
-
   map = this._map.asReadonly();
   vectorLayers = this._vectorLayers.asReadonly();
   hoveredFeatureInfo = this._hoveredFeatureInfo.asReadonly();
+  layers = this._layers.asReadonly();
+  selectedStacItem = signal<any | null>(null);
 
   setMap(map: Map) {
     this._map.set(map);
     this._initialHoverInteraction(map);
-    this.refreshVectorLayers();
+    // this.refreshVectorLayers();
+    this.refreshLayers();
+  }
+
+  selectStacItem(item: any) {
+    this.selectedStacItem.set(item);
   }
 
   handleRightClick(event: MouseEvent) {
@@ -51,7 +59,7 @@ export class MapViewerService {
       this.rightClickedFeature.set({
         ol_uid: getUid(feature),
         ...properties,
-        clientX: event.clientX, 
+        clientX: event.clientX,
         clientY: event.clientY,
         feature: feature
       });
@@ -97,6 +105,23 @@ export class MapViewerService {
     }
   }
 
+  zoomToLayer(layer: any) {
+    const map = this.map();
+    if (!map) return;
+
+    if (layer.get('type') === 'stac') {
+      const extent = layer.getExtent();
+      if (extent) map.getView().fit(extent, { duration: 500, padding: [20, 20, 20, 20] });
+      return;
+    }
+
+    const source = layer.getSource();
+    if (source && source.getExtent) {
+      const extent = source.getExtent();
+      if (!isEmpty(extent)) map.getView().fit(extent, { duration: 500 });
+    }
+  }
+
   refreshVectorLayers() {
     const map = this.map();
     if (map) {
@@ -105,6 +130,18 @@ export class MapViewerService {
       this._vectorLayers.set([...layers]);
     }
   }
+
+  refreshLayers() {
+    const map = this.map();
+    if (!map) return;
+
+    const allLayers = map.getLayers().getArray().filter(l =>
+      l.get('name') && l.get('type') !== 'basemap'
+    );
+
+    this._layers.set([...allLayers]);
+  }
+
 
   /**
    * Retrieves the VectorSource from the 'Imported Data' layer.
@@ -165,7 +202,6 @@ export class MapViewerService {
     map.on('pointermove', (e) => this.hoverSubject.next(e));
   }
 
-
   private readonly HOVER_STYLE = new Style({
     stroke: new Stroke({ color: '#fbbf24', width: 5 }),
     fill: new Fill({ color: 'rgba(251, 191, 36, 0.4)' }),
@@ -202,7 +238,7 @@ export class MapViewerService {
       this._hoveredFeatureInfo.set(null);
       map.getTargetElement().style.cursor = '';
     }
-   
+
   }
 
 }

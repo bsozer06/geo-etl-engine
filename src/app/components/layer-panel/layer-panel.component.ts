@@ -23,41 +23,48 @@ export class LayerPanelComponent {
     return bm;
   });
 
-  layers = this.mapService.vectorLayers;
-
+  // layers = this.mapService.vectorLayers;
+  layers = this.mapService.layers;
+  
   setBaseLayerVisibility(baseLayer: BaseLayer) {
     const layers = this.mapService.getLayersByType('basemap');
     layers.forEach(layer => {
       layer.setVisible(false);
     });
     baseLayer.setVisible(true);
-   }
-
-   toggleLayerVisibility(layer: BaseLayer) {
-    const currentVisibility = layer.getVisible();
-    layer.setVisible(!currentVisibility);    
-   }
-   
-   zoomToLayer(layer: BaseLayer) {
-    this.mapService.zoomToVectorLayer(layer);
-   }
-
-   removeLayer(layer: BaseLayer) {
-    this.mapService.removeVectorLayer(layer);
-   }
-
-
-   getActiveBasemapName(): string {
-  const active = this.basemaps().find(bm => bm.getVisible());
-  return active ? active.get('name').replace('Stadia Maps ', '') : 'Select';
-}
-
-handleImageError(layer: any) {
-  const defaultPath = 'assets/map-previews/osm.webp';
-  
-  if (layer.get('thumbnail') !== defaultPath) {
-    layer.set('thumbnail', defaultPath);
   }
-}
+
+  toggleLayerVisibility(layer: BaseLayer) {
+    const currentVisibility = layer.getVisible();
+    layer.setVisible(!currentVisibility);
+  }
+
+  zoomToLayer(layer: any) {
+    if (layer.get('type') === 'stac') {
+      const extent = layer.getExtent();
+      if (extent) {
+        this.mapService.map()?.getView().fit(extent, { duration: 500, padding: [30, 30, 30, 30] });
+      }
+    } else {
+      this.mapService.zoomToVectorLayer(layer);
+    }
+  }
+  removeLayer(layer: BaseLayer) {
+    this.mapService.removeVectorLayer(layer);
+  }
+
+
+  getActiveBasemapName(): string {
+    const active = this.basemaps().find(bm => bm.getVisible());
+    return active ? active.get('name').replace('Stadia Maps ', '') : 'Select';
+  }
+
+  handleImageError(layer: any) {
+    const defaultPath = 'assets/map-previews/osm.webp';
+
+    if (layer.get('thumbnail') !== defaultPath) {
+      layer.set('thumbnail', defaultPath);
+    }
+  }
 }
 

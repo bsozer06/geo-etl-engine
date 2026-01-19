@@ -58,38 +58,7 @@ export class StacPanelComponent {
   }
 
   displayLayer(item: any) {
-    const map = this.mapService.map();
-    if (!map) return;
-
-    const allLayers = map.getLayers().getArray();
-    for (let i = allLayers.length - 1; i >= 0; i--) {
-      const layer = allLayers[i];
-      if (layer.get('name') === 'stac') {
-        if ((layer as any).getSource()?.clear) {
-          (layer as any).getSource().clear();
-        }
-        map.removeLayer(layer);
-      }
-    }
-
-
-    const stacLayer = new STAC({
-      data: item
-    });
-
-    stacLayer.set('name', 'stac');
-
-    map.addLayer(stacLayer);
-
-    stacLayer.on('addlayer', () => {
-      const extent = stacLayer.getExtent();
-      if (extent) {
-        map.getView().fit(extent as Extent, {
-          duration: 1000,
-          padding: [50, 50, 50, 50]
-        });
-      }
-    });
+    this.mapService.selectStacItem(item);
   }
 
 
