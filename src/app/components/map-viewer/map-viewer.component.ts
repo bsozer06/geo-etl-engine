@@ -89,6 +89,7 @@ export class MapViewerComponent {
 
       const stacLayer = new STAC({
         data: stacItem,
+        zIndex: 1
       });
 
       stacLayer.setProperties({
@@ -177,7 +178,8 @@ export class MapViewerComponent {
   private _createImportedVectorLayer(): VectorLayer {
     const layer = new VectorLayer({
       source: this.importedDataVectorSource,
-      style: this._styleByGeometryType
+      style: this._styleByGeometryType,
+      zIndex: 10
     });
 
     layer.setProperties({
@@ -193,7 +195,8 @@ export class MapViewerComponent {
   private _createDrawingVectorLayer(): VectorLayer {
     const layer = new VectorLayer({
       source: this._drawService.source,
-      style: this._styleByGeometryType
+      style: this._styleByGeometryType,
+      zIndex: 20
     });
 
     layer.setProperties({
