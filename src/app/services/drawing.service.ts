@@ -11,7 +11,6 @@ export class DrawingService {
   private readonly _drawSource = new VectorSource();
   private _activeDrawInteraction: Draw | null = null;
   activeType = signal<'Point' | 'LineString' | 'Polygon' | null>(null);
-  private zone = inject(NgZone);
 
   get source() {
     return this._drawSource;
@@ -27,11 +26,9 @@ export class DrawingService {
 
     if (callback) {
       this._activeDrawInteraction.on('drawend', (event: DrawEvent) => {
-        this.zone.run(() => {
           callback(event.feature);
           this.stopDrawing(map);
         });
-      });
     }
 
     map.addInteraction(this._activeDrawInteraction);

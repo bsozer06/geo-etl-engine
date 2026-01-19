@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, inject, NgZone, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal } from '@angular/core';
 import { StacService } from '../../services/stac.service';
 import { MapViewerService } from '../../services/map-viewer.service';
 import { DrawingService } from '../../services/drawing.service';
@@ -20,8 +20,6 @@ export class StacPanelComponent {
   private drawService = inject(DrawingService);
   private stacService = inject(StacService);
   private mapService = inject(MapViewerService);
-  private zone = inject(NgZone);
-  private cdr = inject(ChangeDetectorRef);
 
   results = signal<any[]>([]);
   loading = signal(false);
@@ -31,7 +29,6 @@ export class StacPanelComponent {
     if (!map) return;
 
     this.drawService.startDrawing(map, 'Polygon', async (feature) => {
-      this.zone.run(async () => {
         try {
           this.loading.set(true);
           this.results.set([]);
@@ -39,11 +36,7 @@ export class StacPanelComponent {
           const data = await this.stacService.searchSTAC(feature);
 
           if (data && data.features) {
-            // this.results.set(data.features);
-            console.log('Veri geldi:', data.features.length);
             this.results.set([...data.features]);
-            this.cdr.markForCheck();
-            this.cdr.detectChanges();
           }
         } catch (err: any) {
           console.error(err);
@@ -51,10 +44,8 @@ export class StacPanelComponent {
         } finally {
           this.loading.set(false);
           this.drawService.clearDrawings();
-          this.cdr.detectChanges();
         }
       });
-    });
   }
 
   displayLayer(item: any) {
