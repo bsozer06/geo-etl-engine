@@ -81,7 +81,7 @@ export class MapViewerComponent {
       const stacItem = this.mapViewerService.selectedStacItem();
       if (!stacItem || !this.map) return;
 
-      console.log('STAC Katmanı yükleniyor:', stacItem.id);
+      console.log('STAC layer is loading:', stacItem.id);
 
       this.map.getLayers().getArray()
         .filter(l => l.get('type') === 'stac')
@@ -93,7 +93,8 @@ export class MapViewerComponent {
       });
 
       stacLayer.setProperties({
-        name: `Satellite: ${new Date(stacItem.properties.datetime).toLocaleDateString()}`,
+        // name: `Satellite: ${new Date(stacItem.properties.datetime).toLocaleDateString()}`,
+        name: `STAC Data`,
         type: 'stac',
         id: 'stac-' + stacItem.id
       });
