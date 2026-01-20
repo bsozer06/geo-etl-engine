@@ -34,17 +34,14 @@
           [class.ring-2]="bm.getVisible()" [class.ring-indigo-100]="bm.getVisible()">
 
           <div class="absolute inset-0 bg-slate-200">
-  <img *ngIf="bm.get('thumbnail')"
-       [src]="bm.get('thumbnail')" 
-       [alt]="bm.get('name')"
-       (error)="handleImageError(bm)"
-       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-       
-  <div *ngIf="!bm.get('thumbnail')" 
-       class="w-full h-full flex items-center justify-center bg-slate-300">
-    <span class="text-[10px] font-bold text-slate-500">MAP</span>
-  </div>
-</div>
+            <img *ngIf="bm.get('thumbnail')" [src]="bm.get('thumbnail')" [alt]="bm.get('name')"
+              (error)="handleImageError(bm)"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+
+            <div *ngIf="!bm.get('thumbnail')" class="w-full h-full flex items-center justify-center bg-slate-300">
+              <span class="text-[10px] font-bold text-slate-500">MAP</span>
+            </div>
+          </div>
 
           <div
             class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur-sm py-0.5 px-1 text-center border-t border-slate-100">
