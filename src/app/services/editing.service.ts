@@ -16,9 +16,8 @@ export class EditingService {
   isEditMode = signal<boolean>(false);
 
   startEditing(map: Map, source: VectorSource) {
-    this.stopEditing(map); // Mevcut etkileşimleri temizle
+    this.stopEditing(map); 
 
-    // 1. Seçim Etkileşimi: Sadece belirtilen kaynaktaki feature'ları seçebilir
     this._selectInteraction = new Select({
       condition: click,
       layers: (layer) => layer.getSource() === source,
@@ -37,12 +36,10 @@ export class EditingService {
       })
     });
 
-    // 2. Modifikasyon Etkileşimi: Seçili olan feature'ları düzenler
     this._modifyInteraction = new Modify({
       features: this._selectInteraction.getFeatures(),
     });
 
-    // 3. Taşıma Etkileşimi: Şekli bir bütün olarak kaydırmak isterseniz
     this._translateInteraction = new Translate({
       features: this._selectInteraction.getFeatures(),
     });
@@ -53,7 +50,6 @@ export class EditingService {
 
     this.isEditMode.set(true);
 
-    // Opsiyonel: İmleci değiştir
     map.getTargetElement().style.cursor = 'pointer';
   }
 
