@@ -1,19 +1,19 @@
 <button 
-      (click)="toggleEdit()"
-      [class.bg-orange-100]="editingService.isEditMode()"
-      [class.text-orange-600]="editingService.isEditMode()"
-      [class.ring-2]="editingService.isEditMode()"
-      class="p-2 rounded-xl transition-all duration-300 hover:bg-slate-100 group relative"
-      title="Edit Geometries">
-      
-      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-      </svg>
+  (click)="toggleEdit()"
+  class="group/btn relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 active:scale-95 shadow-md border border-white/20"
+  [ngClass]="editingService.isEditMode() ? 
+             'bg-orange-500 text-white shadow-orange-200/50 ring-4 ring-orange-500/20' : 
+             'bg-white/40 backdrop-blur-md text-slate-600 hover:bg-white/60 hover:text-orange-600'"
+  title="Edit Geometries">
+  
+  <svg class="w-5 h-5 group-hover/btn:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+  </svg>
 
-      <span *ngIf="editingService.isEditMode()" 
-            class="absolute top-1 right-1 flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-      </span>
-    </button>
+  <span *ngIf="editingService.isEditMode()" 
+        class="absolute -top-1 -right-1 flex h-3 w-3">
+    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+    <span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500 border-2 border-white"></span>
+  </span>
+</button>

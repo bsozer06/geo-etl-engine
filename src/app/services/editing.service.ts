@@ -3,6 +3,7 @@ import { Map } from 'ol';
 import { Select, Modify, Translate } from 'ol/interaction';
 import { click } from 'ol/events/condition';
 import VectorSource from 'ol/source/Vector';
+import { Circle, Fill, Stroke, Style } from 'ol/style';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,19 @@ export class EditingService {
     this._selectInteraction = new Select({
       condition: click,
       layers: (layer) => layer.getSource() === source,
+      style: new Style({
+        fill: new Fill({ color: 'rgba(255, 255, 255, 0.3)' }),
+        stroke: new Stroke({
+          color: '#f97316', // Orange-500
+          width: 3,
+          lineDash: [4, 8]
+        }),
+        image: new Circle({
+          radius: 6,
+          fill: new Fill({ color: '#f97316' }),
+          stroke: new Stroke({ color: '#fff', width: 2 })
+        })
+      })
     });
 
     // 2. Modifikasyon Etkileşimi: Seçili olan feature'ları düzenler

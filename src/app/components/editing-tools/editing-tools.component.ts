@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { EditingService } from '../../services/editing.service';
 import { DrawingService } from '../../services/drawing.service';
 import { MapViewerService } from '../../services/map-viewer.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-editing-tools',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './editing-tools.component.html',
   styleUrl: './editing-tools.component.scss',
 })
