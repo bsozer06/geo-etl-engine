@@ -3,11 +3,6 @@ import { StacService } from '../../services/stac.service';
 import { MapViewerService } from '../../services/map-viewer.service';
 import { DrawingService } from '../../services/drawing.service';
 import { CommonModule } from '@angular/common';
-import TileLayer from 'ol/layer/Tile';
-import { GeoTIFF } from 'ol/source';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import STAC, { Extent } from 'ol-stac';
 
 @Component({
   selector: 'app-stac-panel',

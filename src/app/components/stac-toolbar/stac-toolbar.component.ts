@@ -40,9 +40,5 @@ private overlay = inject(Overlay);
     });
 
     this.overlayRef.attach(new ComponentPortal(StacPanelComponent));
-    // this.overlayRef.backdropClick().subscribe(() => {
-    //   this.overlayRef?.detach();
-    //   this.isOpen = false;
-    // });
   }
 }
