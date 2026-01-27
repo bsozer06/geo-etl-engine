@@ -18,43 +18,5 @@ import { EditingToolsComponent } from "../editing-tools/editing-tools.component"
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
-  // private _mapService = inject(MapViewerService);
-  // private _drawService = inject(DrawingService);
-  // private _editingService = inject(EditingService);
-
-  // showDrawMenu = signal(false);
-  // activeDrawType = this._drawService.activeType;
-
-  // toggleDrawMenu() {
-  //   this.showDrawMenu.update(v => !v);
-  // }
-
-  // toggleEditMode() {
-  //   const map = this._mapService.map();
-  //   const source = this._drawService.source;
-  //   if (!map || !source) {
-  //     return;
-  //   }
-
-  //   if (this._editingService.isEditMode()) {
-  //     this._editingService.stopEditing(map);
-  //   } else {
-  //     // Çizim yapılıyorsa durdur, sonra edite geç
-  //     this._drawService.stopDrawing(map);
-  //     this._editingService.startEditing(map, source);
-  //   }
-  // }
-
-  // startDrawing(type: 'Point' | 'LineString' | 'Polygon' | null) {
-  //   const map = this._mapService.map();
-  //   if (!map) return;
-
-  //   if (type === null) {
-  //     this._drawService.stopDrawing(map);
-  //   } else {
-  //     this._drawService.startDrawing(map, type);
-  //   }
-  //   this.showDrawMenu.set(false);
-  // }
 
 }
