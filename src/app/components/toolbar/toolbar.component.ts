@@ -8,33 +8,53 @@ import { DrawingToolsComponent } from "../drawing-tools/drawing-tools.component"
 import { MapPrintComponent } from "../map-print/map-print.component";
 import { StacPanelComponent } from "../stac-panel/stac-panel.component";
 import { StacToolbarComponent } from "../stac-toolbar/stac-toolbar.component";
+import { EditingService } from '../../services/editing.service';
+import { EditingToolsComponent } from "../editing-tools/editing-tools.component";
 
 @Component({
   selector: 'app-toolbar',
-  imports: [CommonModule, UploadComponent, DownloadComponent, DrawingToolsComponent, MapPrintComponent, StacToolbarComponent],
+  imports: [CommonModule, UploadComponent, DownloadComponent, DrawingToolsComponent, MapPrintComponent, StacToolbarComponent, EditingToolsComponent],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
-  private _mapService = inject(MapViewerService);
-  private _drawService = inject(DrawingService);
-  showDrawMenu = signal(false);
-  activeDrawType = this._drawService.activeType;
+  // private _mapService = inject(MapViewerService);
+  // private _drawService = inject(DrawingService);
+  // private _editingService = inject(EditingService);
 
-  toggleDrawMenu() {
-    this.showDrawMenu.update(v => !v);
-  }
+  // showDrawMenu = signal(false);
+  // activeDrawType = this._drawService.activeType;
 
-  startDrawing(type: 'Point' | 'LineString' | 'Polygon' | null) {
-    const map = this._mapService.map();
-    if (!map) return;
+  // toggleDrawMenu() {
+  //   this.showDrawMenu.update(v => !v);
+  // }
 
-    if (type === null) {
-      this._drawService.stopDrawing(map);
-    } else {
-      this._drawService.startDrawing(map, type);
-    }
-    this.showDrawMenu.set(false);
-  }
+  // toggleEditMode() {
+  //   const map = this._mapService.map();
+  //   const source = this._drawService.source;
+  //   if (!map || !source) {
+  //     return;
+  //   }
+
+  //   if (this._editingService.isEditMode()) {
+  //     this._editingService.stopEditing(map);
+  //   } else {
+  //     // Çizim yapılıyorsa durdur, sonra edite geç
+  //     this._drawService.stopDrawing(map);
+  //     this._editingService.startEditing(map, source);
+  //   }
+  // }
+
+  // startDrawing(type: 'Point' | 'LineString' | 'Polygon' | null) {
+  //   const map = this._mapService.map();
+  //   if (!map) return;
+
+  //   if (type === null) {
+  //     this._drawService.stopDrawing(map);
+  //   } else {
+  //     this._drawService.startDrawing(map, type);
+  //   }
+  //   this.showDrawMenu.set(false);
+  // }
 
 }
