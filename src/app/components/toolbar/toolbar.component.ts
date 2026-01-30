@@ -10,6 +10,7 @@ import { StacPanelComponent } from "../stac-panel/stac-panel.component";
 import { StacToolbarComponent } from "../stac-toolbar/stac-toolbar.component";
 import { EditingService } from '../../services/editing.service';
 import { EditingToolsComponent } from "../editing-tools/editing-tools.component";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -18,5 +19,6 @@ import { EditingToolsComponent } from "../editing-tools/editing-tools.component"
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
-
+  public auth = inject(AuthService);
 }
+

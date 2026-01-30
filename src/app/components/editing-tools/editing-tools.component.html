@@ -1,14 +1,14 @@
 <div class="relative group">
   <button (click)="toggleEdit()"
-    class="group/btn relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 active:scale-95 shadow-md border border-white/20"
+    class="group/btn flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 active:scale-95 shadow-md"
     [ngClass]="editingService.isEditMode() ? 
-             'bg-orange-500 text-white shadow-orange-200/50 ring-4 ring-orange-500/20' : 
-             'bg-yellow-500 backdrop-blur-md text-slate-600 hover:bg-white/60 hover:text-orange-600'">
+             'bg-indigo-600 text-white ring-4 ring-indigo-100' : 'bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white hover:scale-105'"
+  >
 
-    <svg class="w-5 h-5 group-hover/btn:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24"
-      stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+    <svg class="w-5 h-5 group-hover/btn:rotate-45 transition-transform" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h10v10H7z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h4v4H3zM17 17h4v4h-4zM17 3h4v4h-4zM3 17h4v4H3z" />
     </svg>
 
     <span *ngIf="editingService.isEditMode()" class="absolute -top-1 -right-1 flex h-3 w-3">
