@@ -1,7 +1,7 @@
 <div class="relative group" (clickOutside)="showMenu.set(false)">
     <button (click)="toggleMenu()"
         class="group/btn flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 active:scale-95 shadow-md"
-        [ngClass]="isExporting ? 'bg-rose-500 text-white animate-pulse' : 'bg-gradient-to-tr from-violet-600 to-indigo-500 text-white hover:scale-105 shadow-violet-200'">
+        [ngClass]="isExporting ? 'bg-indigo-600 text-white ring-4 ring-indigo-100' : 'bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white hover:scale-105'">
 
         <svg *ngIf="!isExporting" class="w-5 h-5 text-white transition-transform group-hover/btn:rotate-6" aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

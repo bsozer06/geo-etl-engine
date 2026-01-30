@@ -1,9 +1,9 @@
 <div class="relative group">
   <button (click)="toggleEdit()"
-    class="group/btn relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 active:scale-95 shadow-md border border-white/20"
+    class="group/btn flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 active:scale-95 shadow-md"
     [ngClass]="editingService.isEditMode() ? 
-             'bg-orange-500 text-white shadow-orange-200/50 ring-4 ring-orange-500/20' : 
-             'bg-yellow-500 backdrop-blur-md text-slate-600 hover:bg-white/60 hover:text-orange-600'">
+             'bg-indigo-600 text-white ring-4 ring-indigo-100' : 'bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white hover:scale-105'"
+  >
 
     <svg class="w-5 h-5 group-hover/btn:rotate-45 transition-transform" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2">

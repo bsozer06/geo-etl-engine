@@ -1,33 +1,22 @@
 <div class="relative flex items-center group">
 
-  <button 
-    type="button" 
-    (click)="fileInput.click()" 
-    [disabled]="loading" 
-    class="
+  <button type="button" (click)="fileInput.click()" [disabled]="loading" class="
       relative flex items-center justify-center
       w-10 h-10
       rounded-xl
-      bg-gradient-to-tr from-emerald-600 to-emerald-500
+      bg-indigo-600 text-white ring-4 ring-indigo-100      
       text-white shadow-md
-      hover:shadow-emerald-200 hover:scale-105
+      hover:shadow-indigo-200 hover:scale-105
       transition-all duration-200 active:scale-95
       disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed
-    "
-  >
-    <svg 
-      *ngIf="!loading"
-      class="w-5 h-5 transition-transform group-hover:translate-y-[-1px]" 
-      fill="none" viewBox="0 0 24 24" stroke="currentColor"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+    ">
+    <svg *ngIf="!loading" class="w-5 h-5 transition-transform group-hover:translate-y-[-1px]" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
     </svg>
 
-    <svg 
-      *ngIf="loading" 
-      class="w-5 h-5 animate-spin" 
-      viewBox="0 0 24 24" fill="none"
-    >
+    <svg *ngIf="loading" class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
     </svg>
