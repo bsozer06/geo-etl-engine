@@ -29,7 +29,7 @@ export class AuthService {
 
 
   constructor() {
-    // Oturum yükle
+    // Load session from localStorage
     const raw = localStorage.getItem(this.STORAGE_KEY);
     if (raw) {
       try {
@@ -40,7 +40,7 @@ export class AuthService {
       } catch {}
     }
 
-    // Oturum değişince localStorage'a kaydet
+    // Save session to localStorage on user change
     effect(() => {
       const user = this._user();
       if (user) {
@@ -55,7 +55,7 @@ export class AuthService {
     // Demo: Select user from demoUsers
     const found = this.demoUsers.find(u => u.username === username);
     if (found) {
-      // Her girişte yeni bir user nesnesi oluştur, sahte token ekle
+      // Create a new user object with a fake token on each login
       const user = { ...found, token: this.generateToken() };
       this._user.set(user);
       return true;
@@ -68,7 +68,7 @@ export class AuthService {
   }
 
   private generateToken(): string {
-    // Basit sahte token
+    // Simple fake token
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
   }
 }

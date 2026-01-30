@@ -23,7 +23,7 @@ export class StacPanelComponent {
     const map = this.mapService.map();
     if (!map) return;
 
-    this.drawService.startDrawing(map, 'Polygon', async (feature) => {
+    this.drawService.startStacDrawing(map, async (feature) => {
         try {
           this.loading.set(true);
           this.results.set([]);
@@ -32,13 +32,13 @@ export class StacPanelComponent {
 
           if (data && data.features) {
             this.results.set([...data.features]);
+            this.drawService.clearStacDrawings();
           }
         } catch (err: any) {
           console.error(err);
           alert(err.message);
         } finally {
           this.loading.set(false);
-          this.drawService.clearDrawings();
         }
       });
   }

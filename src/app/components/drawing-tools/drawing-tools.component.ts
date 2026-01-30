@@ -17,6 +17,8 @@ export class DrawingToolsComponent {
   showMenu = signal(false);
   activeType = this._drawService.activeType;
 
+  private _dblClickListener: ((e: MouseEvent) => void) | null = null;
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (!this._el.nativeElement.contains(event.target)) {
@@ -34,10 +36,30 @@ export class DrawingToolsComponent {
 
     if (type === null) {
       this._drawService.stopDrawing(map);
+      this._removeDblClickListener(map);
     } else {
       this._drawService.startDrawing(map, type);
+      this._addDblClickListener(map);
     }
     this.showMenu.set(false);
+  }
+
+  private _addDblClickListener(map: any) {
+    this._removeDblClickListener(map);
+    this._dblClickListener = (e: MouseEvent) => {
+      if (e.button === 0 && this.activeType()) {
+        this._drawService.stopDrawing(map);
+        this._removeDblClickListener(map);
+      }
+    };
+    map.getViewport().addEventListener('dblclick', this._dblClickListener);
+  }
+
+  private _removeDblClickListener(map: any) {
+    if (this._dblClickListener) {
+      map.getViewport().removeEventListener('dblclick', this._dblClickListener);
+      this._dblClickListener = null;
+    }
   }
 
 }

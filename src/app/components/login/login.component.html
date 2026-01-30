@@ -83,7 +83,7 @@
                     {{ auth.user()?.info }}
                 </div>
 
-                <button (click)="auth.logout(); showInfo.set(false)"
+                <button (click)="onLogout()"
                     class="w-full group/logout px-3 py-2.5 bg-red-500/10 hover:bg-red-500 transition-all text-red-600 hover:text-white rounded-xl flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest">
                     <svg class="w-4 h-4 transition-transform group-hover/logout:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7" />
