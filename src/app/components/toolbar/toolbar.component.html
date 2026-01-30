@@ -21,6 +21,6 @@
 
   <div class="w-[1px] h-6 bg-gray-300/50 mx-1"></div>
 
-  <app-stac-toolbar></app-stac-toolbar>
+    <app-stac-toolbar *ngIf="auth.user()?.role === 'admin'"></app-stac-toolbar>
 
 </div>
